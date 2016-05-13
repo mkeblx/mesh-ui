@@ -35,8 +35,7 @@ MV.Button.prototype.init = function(options) {
   var mat;
   var texture = null;
   if (options.image)
-    texture = THREE.ImageUtils.loadTexture(options.image, null,
-      function(){ mat.opacity = 1; });
+    texture = new THREE.TextureLoader().load(options.image, function(){ mat.opacity = 1; });
 
   mat = new THREE.MeshBasicMaterial({
     color: options.color,

@@ -49,7 +49,7 @@ MV.ProgressBar2D.prototype.init = function(options) {
 
   var canvas = document.createElement('canvas');
   canvas.width = 1024;
-  canvas.height = 4;
+  canvas.height = 2;
   this.canvas = canvas;
 
   var ctx = canvas.getContext('2d');

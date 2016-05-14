@@ -110,7 +110,8 @@ function setupWorld() {
   progressBar3D = new MV.ProgressBar( {
     width: 1,
     thickness: 0.04,
-    rounded: true } );
+    rounded: true,
+    lit: true } );
   progressBar3D.getObject().position.set(0, -0.07, 0);
   progressBarGroup.add( progressBar3D.getObject() );
 
@@ -192,8 +193,12 @@ var mouseEl = document.getElementById('mouse');
 function setupEvents() {
   document.addEventListener( 'mousemove', onDocumentMouseMove, false );
   document.getElementById('ui-canvas').addEventListener( 'click', onDocumentClick, false );
-
-
+  document.addEventListener('keydown', function(event){
+    console.log(event.keyCode);
+    if (event.keyCode == 82) { // R
+      buttonClick();
+    }
+  }, false );
 
   function onDocumentMouseMove( event ) {
     event.preventDefault();
@@ -230,7 +235,7 @@ function setupEvents() {
         var value = vals[0];
 
         progressBar.setValues( vals );
-        //progressBar3D.setValues( vals );
+        progressBar3D.setValues( vals );
         progressRadial.setValues( vals );
         progressRadial3D.setValues( vals );
         progressBarLabel.value = 'ProgressBar: ' + Math.round( value*100 );

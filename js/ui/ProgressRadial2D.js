@@ -118,15 +118,23 @@ MV.ProgressRadial2D.prototype._update = function( ) {
   ctx.lineWidth = lineWidth + 3;
 
   if (this._values.length && this._values.length <= this._colors.length) {
-    var startAngle = -Math.PI/2;
-
+    var total = 0;
     for (var i = 0; i < this._values.length; i++) {
+      total += this._values[i];
+    }
+
+    var startAngle = -Math.PI/2;
+    var endAngle;
+
+    var length = total;
+    for (var i = this._values.length-1; i >= 0; i--) {
       var val = this._values[i];
 
       ctx.beginPath();
-      var angleVal = Math.PI*2*val;
+      var angleVal = Math.PI*2 * val;
+      endAngle = Math.PI*2 * length;
 
-      ctx.arc(cxy, cxy, radius, startAngle, startAngle+angleVal, false);
+      ctx.arc(cxy, cxy, radius, startAngle, startAngle+endAngle, false);
 
       if (this.options.rounded) {
         ctx.lineCap = 'round';
@@ -135,7 +143,7 @@ MV.ProgressRadial2D.prototype._update = function( ) {
       ctx.strokeStyle = this._colors[i];
       ctx.stroke();
 
-      startAngle += angleVal;
+      length -= val;
     }
   }
 

@@ -2,11 +2,11 @@
 
 var MV = MV || {};
 
-MV.RoundedBarGeometry = function ( width, size, segments ) {
+MV.RoundedBarBufferGeometry = function ( width, size, segments ) {
 
   THREE.Geometry.call( this );
 
-  this.type = 'RoundedBarGeometry';
+  this.type = 'RoundedBarBufferGeometry';
 
   this.parameters = {
     width: width,

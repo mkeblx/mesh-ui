@@ -62,11 +62,13 @@ MV.ProgressBar2D.prototype.init = function(options) {
 
 
   var segs = options.segments;
-  var radius = thickness/2;
 
-  var _width = options.rounded ? width - 2*radius : width;
-
-  var geo = new THREE.PlaneGeometry(_width, thickness, 1, 1);
+  var geo;
+  if (options.rounded) {
+    geo = new MV.RoundedBarGeometry2D(width, thickness, segs);
+  } else {
+    geo = new THREE.PlaneGeometry(width, thickness, 1, 1);
+  }
 
   var mat = new MatType( {
     map: this.texture
@@ -74,52 +76,6 @@ MV.ProgressBar2D.prototype.init = function(options) {
 
   var mesh = new THREE.Mesh(geo, mat);
   container.add(mesh);
-
-
-  if (options.rounded) {
-    // main
-    var pc = (width - thickness) / width;
-    var rep = (1 - pc) / 2;
-
-    mat.map.repeat.x = pc;
-    mat.map.offset.x = rep;
-
-    // end caps
-    var capGeo = new THREE.CircleGeometry(radius, segs, Math.PI/2, Math.PI);
-
-    var textureL = new THREE.Texture(canvas);
-    this.textureL = textureL;
-
-    var matL = new MatType( {
-      map: textureL
-    });
-    matL.map.repeat.x = rep * 2;
-    matL.map.offset.x = 0;
-    var capMeshL = new THREE.Mesh(capGeo, matL);
-    this.capMeshL = capMeshL;
-
-
-    var textureR = new THREE.Texture(canvas);
-    this.textureR = textureR;
-
-    var matR = new MatType( {
-      map: textureR
-    });
-    matR.map.repeat.x = rep * 2;
-    matR.map.offset.x = pc;
-    capGeo = new THREE.CircleGeometry(radius, segs, -Math.PI/2, Math.PI);
-    var capMeshR = new THREE.Mesh(capGeo, matR);
-    this.capMeshR = capMeshR;
-
-    capMeshL.position.setX( -_width/2 );
-    capMeshR.position.setX(  _width/2 );
-
-    container.add(capMeshL);
-    container.add(capMeshR);
-
-    this.matL = matL;
-    this.matR = matR;
-  }
 
   /* progress
   var progressC = new THREE.Object3D();
@@ -207,11 +163,6 @@ MV.ProgressBar2D.prototype._update = function() {
   }
 
   this.texture.needsUpdate = true;
-
-  if (opts.rounded) {
-    this.textureL.needsUpdate = true;
-    this.textureR.needsUpdate = true;
-  }
 };
 
 MV.ProgressBar2D.prototype.update = function(dt) {

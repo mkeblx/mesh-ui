@@ -74,14 +74,16 @@ MV.ProgressBar.prototype.init = function(options) {
   var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
 
 
-  //
   var segs = options.segments;
   var radius = thickness/2;
 
-  var _width = options.rounded ? width - 2*radius : width;
-
-  var geo = new THREE.CylinderGeometry(radius, radius, _width, segs, 1, true);
-  geo.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
+  var geo;
+  if (options.rounded) {
+    geo = new MV.RoundedBarGeometry(width, thickness, segs);
+  } else {
+    geo = new THREE.CylinderGeometry(radius, radius, width, segs, 1, true);
+    geo.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
+  }
 
   var mat = new MatType( {
     map: this.texture
@@ -89,70 +91,6 @@ MV.ProgressBar.prototype.init = function(options) {
 
   var mesh = new THREE.Mesh(geo, mat);
   container.add(mesh);
-
-  // end caps
-  if (options.rounded) {
-    // main
-    var pc = (width - thickness) / width;
-    var rep = (1 - pc) / 2;
-
-    mat.map.repeat.y = pc;
-    mat.map.offset.y = rep;
-
-    // endcaps
-    var capGeo = new THREE.SphereGeometry(radius, segs, 8, 0, Math.PI*2, 0, Math.PI/2);
-
-    var textureL = new THREE.Texture(canvas);
-    this.textureL = textureL;
-
-    var matL = new MatType( {
-      map: textureL
-    });
-    matL.map.repeat.y = rep * 2;
-    matL.map.offset.y = 1;
-    var capMeshL = new THREE.Mesh(capGeo, matL);
-    this.capMeshL = capMeshL;
-
-    var textureR = new THREE.Texture(canvas);
-    this.textureR = textureR;
-
-    var matR = new MatType( {
-      map: textureR
-    });
-    matR.map.repeat.y = rep * 2;
-    matR.map.offset.y = 0;
-    capGeo = new THREE.SphereGeometry(radius, segs, 8, 0, Math.PI*2, Math.PI, Math.PI);
-    var capMeshR = new THREE.Mesh(capGeo, matR);
-    this.capMeshR = capMeshR;
-
-    capMeshL.rotation.set(Math.PI/segs, 0,  Math.PI/2);
-    capMeshR.rotation.set(Math.PI/segs, 0, -Math.PI/2);
-  } else {
-    var capGeo = new THREE.CircleGeometry(radius, segs);
-
-    var matL = new MatType( {
-      color: options.bgColor
-    });
-    var capMeshL = new THREE.Mesh(capGeo, matL);
-
-    var matR = new MatType( {
-      color: options.bgColor
-    });
-    var capMeshR = new THREE.Mesh(capGeo, matR);
-
-    capMeshL.rotation.set(0, -Math.PI/2, 0);
-    capMeshR.rotation.set(0,  Math.PI/2, 0);
-  }
-
-  capMeshL.position.setX( -_width/2 );
-  capMeshR.position.setX(  _width/2 );
-
-  container.add(capMeshL);
-  container.add(capMeshR);
-
-  this.matL = matL;
-  this.matR = matR;
-
 
   this.mesh = mesh;
   this.container = container;
@@ -209,10 +147,6 @@ MV.ProgressBar.prototype._update = function() {
 
   this.texture.needsUpdate = true;
 
-  if (opts.rounded) {
-    this.textureL.needsUpdate = true;
-    this.textureR.needsUpdate = true;
-  }
   /* else {
     var colorL, colorR;
 

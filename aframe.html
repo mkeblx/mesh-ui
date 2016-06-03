@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>mesh-ui - aframe</title>
+</head>
+<body>
+
+
+<script src="js/libs/aframe.js"></script>
+
+<script src="js/libs/lodash.min.js"></script>
+<!--<script src="js/libs/three.js"></script>-->
+<script src="js/libs/tween.min.js"></script>
+
+<script src="js/ui/Text.js"></script>
+<script src="js/ui/RoundedBarGeometry.js"></script>
+<script src="js/ui/RoundedBarGeometry2D.js"></script>
+<script src="js/ui/ProgressBar.js"></script>
+<script src="js/ui/ProgressBar2D.js"></script>
+<script src="js/ui/ProgressRadial.js"></script>
+<script src="js/ui/ProgressRadial2D.js"></script>
+<script src="js/ui/Button.js"></script>
+
+<script>
+AFRAME.registerComponent('progress-bar', {
+  schema: {
+    values: {
+      default: '0.1',
+      parse: function(value) {
+        return value.split(' ').map(parseFloat);
+      }
+    },
+    colors: {
+      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+    },
+    activeColor: { default: '#2196f3' },
+    bgColor: { default: '#666666' },
+    value: { default: 0 },
+    width: { default: 1 },
+    thickness: { default: 0.04 },
+    flat: { default: false },
+    rounded: { default: true },
+    lit: { default: false },
+    segments: { default: 16 },
+    gradient: { default: false }
+  },
+
+  // TODO: if values or colors only updated lazily update
+  update: function(oldData) {
+    var data = this.data;
+
+    this.progressBar = new MV.ProgressBar( {
+      width: data.width,
+      thickness: data.thickness,
+      flat: data.flat,
+      rounded: data.rounded,
+      lit: data.lit,
+      segments: data.segments,
+      gradient: data.gradient } );
+    this.progressBar.setColors(data.colors);
+    this.progressBar.setValues(data.values);
+
+    this.el.setObject3D('mesh', this.progressBar.getObject());
+  },
+
+  remove: function() {
+    this.el.removeObject3D('mesh');
+  }
+});
+</script>
+
+<a-scene>
+  <a-box position="-1.5 0.5 1" rotation="0 45 0" width="1" height="1" depth="1"  color="#4CC3D9"></a-box>
+  <a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+
+  <a-entity progress-bar="values: 0.1 0.5 0.1; width: 3; thickness: 0.1; lit: true" position="0 1.2 1"></a-entity>
+  <a-entity progress-bar="values: 0.8; width: 3; thickness: 0.1; lit: true; gradient: true" position="0 1.4 1"></a-entity>
+
+
+  <a-sky color="#ECECEC"></a-sky>
+</a-scene>
+
+</body>
+</html>

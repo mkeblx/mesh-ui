@@ -127,16 +127,17 @@ MV.ProgressBar.prototype.setValues = function( arr ) {
 MV.ProgressBar.prototype._update = function() {
   var opts = this.options;
   var ctx = this.ctx;
+  var vals = this._values;
   var w = this.canvas.width, h = this.canvas.height;
 
   ctx.fillStyle = opts.bgColor;
   ctx.fillRect( 0,0, w,h );
 
-  if (this._values.length && this._values.length <= this._colors.length) {
+  if (vals.length && vals.length <= this._colors.length) {
     var start = 0;
 
-    for (var i = 0; i < this._values.length; i++) {
-      var val = this._values[i];
+    for (var i = 0; i < vals.length; i++) {
+      var val = vals[i];
 
       ctx.fillStyle = this._colors[i];
       ctx.fillRect( 0, h*start, w,h*val );

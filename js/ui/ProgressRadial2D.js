@@ -97,6 +97,8 @@ MV.ProgressRadial2D.prototype.setValues = function( arr ) {
 
 MV.ProgressRadial2D.prototype._update = function( ) {
   var ctx = this.ctx;
+  var opts = this.options;
+  var vals = this._values;
 
   ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
 
@@ -105,24 +107,24 @@ MV.ProgressRadial2D.prototype._update = function( ) {
 
   var a = -Math.PI/2; // initial angle: -90deg
 
-  var lineWidth = this.options.thickness / this.options.width * this.canvas.width;
+  var lineWidth = opts.thickness / opts.width * this.canvas.width;
 
   var radius = this.canvas.width/2 - lineWidth/2 - 0.5;
 
   var cxy = this.canvas.width/2;
 
   // bg
-  if (this.options.bg) {
-    ctx.fillStyle = this.options.bgColor;
+  if (opts.bg) {
+    ctx.fillStyle = opts.bgColor;
     ctx.fillRect( 0,0, this.canvas.width,this.canvas.height );
   }
 
   ctx.lineWidth = lineWidth + 3;
 
-  if (this._values.length && this._values.length <= this._colors.length) {
+  if (vals.length && vals.length <= this._colors.length) {
     var total = 0;
-    for (var i = 0; i < this._values.length; i++) {
-      total += this._values[i];
+    for (var i = 0; i < vals.length; i++) {
+      total += vals[i];
     }
 
     var startAngle = -Math.PI/2;
@@ -131,8 +133,8 @@ MV.ProgressRadial2D.prototype._update = function( ) {
     var frac = this.options.arc / (Math.PI*2);
 
     var length = total * frac;
-    for (var i = this._values.length-1; i >= 0; i--) {
-      var val = this._values[i] * frac;
+    for (var i = vals.length-1; i >= 0; i--) {
+      var val = vals[i] * frac;
 
       ctx.beginPath();
       var angleVal = Math.PI*2 * val;

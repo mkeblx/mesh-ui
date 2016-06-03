@@ -21,7 +21,8 @@ MV.ProgressRadial2D.OPTIONS = {
   thickness: 0.1,
   rounded: true,
   width: 1,
-  segments: 52
+  segments: 52,
+  arc: Math.PI*2
 };
 
 Object.defineProperties(MV.ProgressRadial2D.prototype, {
@@ -55,7 +56,8 @@ MV.ProgressRadial2D.prototype.init = function(options) {
   var texture = new THREE.Texture(canvas);
   this.texture = texture;
 
-  var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1);
+  // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
+  var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
   var mat = new THREE.MeshBasicMaterial({
     map: this.texture
   });
@@ -126,15 +128,17 @@ MV.ProgressRadial2D.prototype._update = function( ) {
     var startAngle = -Math.PI/2;
     var endAngle;
 
-    var length = total;
+    var frac = this.options.arc / (Math.PI*2);
+
+    var length = total * frac;
     for (var i = this._values.length-1; i >= 0; i--) {
-      var val = this._values[i];
+      var val = this._values[i] * frac;
 
       ctx.beginPath();
       var angleVal = Math.PI*2 * val;
       endAngle = Math.PI*2 * length;
 
-      ctx.arc(cxy, cxy, radius, startAngle, startAngle+endAngle, false);
+      ctx.arc(cxy, cxy, radius, startAngle, (startAngle+endAngle), false);
 
       if (this.options.rounded) {
         ctx.lineCap = 'round';

@@ -23,7 +23,8 @@ MV.ProgressRadial.OPTIONS = {
   width: 1,
   lit: false,
   segments: 52,
-  radialSegments: 24
+  radialSegments: 24,
+  arc: Math.PI*2
 };
 
 Object.defineProperties(MV.ProgressRadial.prototype, {
@@ -61,7 +62,7 @@ MV.ProgressRadial.prototype.init = function(options) {
   var radius = (width-options.thickness) / 2;
 
   // TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)
-  var geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments);
+  var geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
 
   var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
 

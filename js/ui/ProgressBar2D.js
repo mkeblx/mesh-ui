@@ -21,7 +21,8 @@ MV.ProgressBar2D.OPTIONS = {
   thickness: 0.02,
   rounded: true,
   lit: false,
-  segments: 16
+  segments: 16,
+  gradient: false
 };
 
 Object.defineProperties(MV.ProgressBar2D.prototype, {
@@ -150,16 +151,28 @@ MV.ProgressBar2D.prototype._update = function() {
   ctx.fillStyle = opts.bgColor;
   ctx.fillRect( 0,0, w,h );
 
-  if (vals.length && vals.length <= this._colors.length) {
-    var start = 0;
+  if (opts.gradient && this._colors.length > 1) {
+    var grd = ctx.createLinearGradient( 0,0, w,h );
+    grd.addColorStop(0, this._colors[0]);
+    grd.addColorStop(1, this._colors[1]);
 
-    for (var i = 0; i < vals.length; i++) {
-      var val = vals[i];
+    ctx.fillStyle = grd;
+    ctx.fillRect( 0,0, w,h );
 
-      ctx.fillStyle = this._colors[i];
-      ctx.fillRect( w*start,0, w*val,h );
+    ctx.fillStyle = opts.bgColor;
+    ctx.fillRect( w*vals[0],0, w,h );
+  } else {
+    if (vals.length && vals.length <= this._colors.length) {
+      var start = 0;
 
-      start += val;
+      for (var i = 0; i < vals.length; i++) {
+        var val = vals[i];
+
+        ctx.fillStyle = this._colors[i];
+        ctx.fillRect( w*start,0, w*val,h );
+
+        start += val;
+      }
     }
   }
 

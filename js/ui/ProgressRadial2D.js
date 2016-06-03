@@ -22,7 +22,8 @@ MV.ProgressRadial2D.OPTIONS = {
   rounded: true,
   width: 1,
   segments: 52,
-  arc: Math.PI*2
+  arc: Math.PI*2,
+  gradient: false
 };
 
 Object.defineProperties(MV.ProgressRadial2D.prototype, {
@@ -99,57 +100,75 @@ MV.ProgressRadial2D.prototype._update = function( ) {
   var ctx = this.ctx;
   var opts = this.options;
   var vals = this._values;
+  var w = this.canvas.width, h = this.canvas.height;
 
-  ctx.clearRect(0,0, this.canvas.width, this.canvas.height);
+  ctx.clearRect(0,0, w,h);
 
 
   // arc(x, y, radius, startAngle, endAngle, anticlockwise)
 
   var a = -Math.PI/2; // initial angle: -90deg
 
-  var lineWidth = opts.thickness / opts.width * this.canvas.width;
+  var lineWidth = opts.thickness / opts.width * w;
 
-  var radius = this.canvas.width/2 - lineWidth/2 - 0.5;
+  var radius = w/2 - lineWidth/2 - 0.5;
 
-  var cxy = this.canvas.width/2;
+  var cxy = w/2;
 
   // bg
   if (opts.bg) {
     ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( 0,0, this.canvas.width,this.canvas.height );
+    ctx.fillRect( 0,0, w,h );
   }
 
   ctx.lineWidth = lineWidth + 3;
 
-  if (vals.length && vals.length <= this._colors.length) {
-    var total = 0;
-    for (var i = 0; i < vals.length; i++) {
-      total += vals[i];
+  var startAngle = -Math.PI/2;
+  var endAngle;
+
+  // TODO: fix gradient mode, gradient is in screen space
+  if (opts.gradient && this._colors.length > 1) {
+    var grd = ctx.createLinearGradient( 0,0, w,h );
+    grd.addColorStop(0, this._colors[0]);
+    grd.addColorStop(1, this._colors[1]);
+
+    ctx.beginPath();
+    ctx.arc(cxy, cxy, radius, startAngle, startAngle+Math.PI*2*vals[0], false);
+
+    if (opts.rounded) {
+      ctx.lineCap = 'round';
     }
 
-    var startAngle = -Math.PI/2;
-    var endAngle;
-
-    var frac = this.options.arc / (Math.PI*2);
-
-    var length = total * frac;
-    for (var i = vals.length-1; i >= 0; i--) {
-      var val = vals[i] * frac;
-
-      ctx.beginPath();
-      var angleVal = Math.PI*2 * val;
-      endAngle = Math.PI*2 * length;
-
-      ctx.arc(cxy, cxy, radius, startAngle, (startAngle+endAngle), false);
-
-      if (this.options.rounded) {
-        ctx.lineCap = 'round';
+    ctx.strokeStyle = grd;
+    ctx.stroke();
+  } else {
+    if (vals.length && vals.length <= this._colors.length) {
+      var total = 0;
+      for (var i = 0; i < vals.length; i++) {
+        total += vals[i];
       }
 
-      ctx.strokeStyle = this._colors[i];
-      ctx.stroke();
+      var frac = opts.arc / (Math.PI*2);
 
-      length -= val;
+      var length = total * frac;
+      for (var i = vals.length-1; i >= 0; i--) {
+        var val = vals[i] * frac;
+
+        ctx.beginPath();
+        var angleVal = Math.PI*2 * val;
+        endAngle = Math.PI*2 * length;
+
+        ctx.arc(cxy, cxy, radius, startAngle, (startAngle+endAngle), false);
+
+        if (opts.rounded) {
+          ctx.lineCap = 'round';
+        }
+
+        ctx.strokeStyle = this._colors[i];
+        ctx.stroke();
+
+        length -= val;
+      }
     }
   }
 

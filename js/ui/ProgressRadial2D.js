@@ -7,17 +7,17 @@ MV.ProgressRadial2D = function(options) {
 
   this.init(this.options);
 
-  this._colors = [ this.options.activeColor ];
+  this._colors = this.options.colors;
   this._values = [];
 
-  this.value = this.options.value;
+  this.value = this.options.values[0];
 };
 
 MV.ProgressRadial2D.OPTIONS = {
-  activeColor: '#2196f3',
   bgColor: '#666666',
-  bg: true,
-  value: 0,
+  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+  values: [0],
+  bg: false,
   thickness: 0.1,
   rounded: true,
   width: 1,
@@ -60,7 +60,8 @@ MV.ProgressRadial2D.prototype.init = function(options) {
   // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
   var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
   var mat = new THREE.MeshBasicMaterial({
-    map: this.texture
+    map: this.texture,
+    transparent: !options.bg
   });
 
   var mesh = new THREE.Mesh(geo, mat);

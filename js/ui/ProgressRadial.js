@@ -10,14 +10,14 @@ MV.ProgressRadial = function(options) {
   this._colors = [ this.options.activeColor ];
   this._values = [];
 
-  this.value = this.options.value;
+  this.value = this.options.values[0];
 };
 
 MV.ProgressRadial.OPTIONS = {
-  activeColor: '#2196f3',
   bgColor: '#666666',
-  bg: true,
-  value: 0,
+  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+  values: [0],
+  bg: false,
   thickness: 0.1,
   rounded: true,
   width: 1,
@@ -68,7 +68,8 @@ MV.ProgressRadial.prototype.init = function(options) {
   var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
 
   var mat = new MatType({
-    map: this.texture
+    map: this.texture,
+    transparent: !options.bg
   });
 
   var mesh = new THREE.Mesh(geo, mat);
@@ -112,8 +113,12 @@ MV.ProgressRadial.prototype._update = function() {
   var vals = this._values;
   var w = this.canvas.width, h = this.canvas.height;
 
-  ctx.fillStyle = opts.bgColor;
-  ctx.fillRect( 0,0, w,h );
+  if (!opts.bg) {
+    ctx.clearRect( 0,0, w,h );
+  } else {
+    ctx.fillStyle = opts.bgColor;
+    ctx.fillRect( 0,0, w,h );
+  }
 
   if (opts.gradient && this._colors.length > 1) {
     var grd = ctx.createLinearGradient( 0,0, w,h );

@@ -40,7 +40,6 @@ AFRAME.registerComponent('progress-bar', {
     value: { default: 0 },
     width: { default: 1 },
     thickness: { default: 0.04 },
-    flat: { default: false },
     rounded: { default: true },
     lit: { default: false },
     segments: { default: 16 },
@@ -54,7 +53,6 @@ AFRAME.registerComponent('progress-bar', {
     this.progressBar = new MV.ProgressBar( {
       width: data.width,
       thickness: data.thickness,
-      flat: data.flat,
       rounded: data.rounded,
       lit: data.lit,
       segments: data.segments,

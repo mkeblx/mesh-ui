@@ -7,21 +7,19 @@ MV.ProgressBar = function(options) {
 
   this.init(this.options);
 
-  this.flat = this.options.flat;
-
-  this._colors = [ this.options.activeColor ];
+  this._colors = this.options.colors;
   this._values = [];
 
-  this.value = this.options.value;
+  this.value = this.options.values[0];
 };
 
 MV.ProgressBar.OPTIONS = {
-  activeColor: '#2196f3',
   bgColor: '#666666',
-  value: 0,
+  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+  values: [0],
+  bg: false,
   width: 1,
   thickness: 0.04,
-  flat: false,
   rounded: true,
   lit: false,
   segments: 16,
@@ -37,17 +35,6 @@ Object.defineProperties(MV.ProgressBar.prototype, {
       if ( val !== this._value ) {
         this._value = THREE.Math.clamp( val, 0, 1 );
         this._update( this._value );
-      }
-    }
-  },
-  'flat': {
-    get: function() {
-      return this._flat;
-    },
-    set: function(val) {
-      if (val !== this._flat) {
-        this._flat = val;
-        this.container.scale.set( 1, 1, val ? 0.0001 : 1 );
       }
     }
   }
@@ -87,7 +74,8 @@ MV.ProgressBar.prototype.init = function(options) {
   }
 
   var mat = new MatType( {
-    map: this.texture
+    map: this.texture,
+    transparent: !options.bg
   } );
 
   var mesh = new THREE.Mesh(geo, mat);
@@ -131,8 +119,12 @@ MV.ProgressBar.prototype._update = function() {
   var vals = this._values;
   var w = this.canvas.width, h = this.canvas.height;
 
-  ctx.fillStyle = opts.bgColor;
-  ctx.fillRect( 0,0, w,h );
+  if (!opts.bg) {
+    ctx.clearRect( 0,0, w,h );
+  } else {
+    ctx.fillStyle = opts.bgColor;
+    ctx.fillRect( 0,0, w,h );
+  }
 
   if (opts.gradient && this._colors.length > 1) {
     var grd = ctx.createLinearGradient( 0,0, w,h );

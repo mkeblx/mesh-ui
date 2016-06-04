@@ -5,19 +5,20 @@ var MV = MV || {};
 MV.ProgressRadial2D = function(options) {
   this.options = _.defaults(options || {}, MV.ProgressRadial2D.OPTIONS);
 
+  this._colors = this.options.colors;
+  this._values = this.options.values;
+
   this.init(this.options);
 
-  this._colors = this.options.colors;
-  this._values = [];
-
-  this.value = this.options.values[0];
+  //this.value = this.options.values[0];
+  this._update();
 };
 
 MV.ProgressRadial2D.OPTIONS = {
   bgColor: '#666666',
   colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
   values: [0],
-  bg: false,
+  bg: true,
   thickness: 0.1,
   rounded: true,
   width: 1,

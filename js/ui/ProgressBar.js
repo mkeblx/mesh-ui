@@ -5,19 +5,19 @@ var MV = MV || {};
 MV.ProgressBar = function(options) {
   this.options = _.defaults(options || {}, MV.ProgressBar.OPTIONS);
 
+  this._colors = this.options.colors;
+  this._values = this.options.values;
+
   this.init(this.options);
 
-  this._colors = this.options.colors;
-  this._values = [];
-
-  this.value = this.options.values[0];
+  this._update();
 };
 
 MV.ProgressBar.OPTIONS = {
   bgColor: '#666666',
   colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
   values: [0],
-  bg: false,
+  bg: true,
   width: 1,
   thickness: 0.04,
   rounded: true,
@@ -29,12 +29,12 @@ MV.ProgressBar.OPTIONS = {
 Object.defineProperties(MV.ProgressBar.prototype, {
   'value': {
     get: function() {
-      return this._value;
+      return this._values.length ? this._values[0] : 0;
     },
     set: function( val ) {
       if ( val !== this._value ) {
-        this._value = THREE.Math.clamp( val, 0, 1 );
-        this._update( this._value );
+        //this._value = THREE.Math.clamp( val, 0, 1 );
+        //this._update( );
       }
     }
   }

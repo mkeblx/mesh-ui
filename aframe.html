@@ -47,9 +47,20 @@ AFRAME.registerComponent('progress-bar', {
     gradient: { default: false }
   },
 
-  // TODO: if values or colors only updated lazily update
   update: function(oldData) {
     var data = this.data;
+
+    var diff = _.reduce(data, function(result, value, key) {
+      return _.isEqual(value, oldData[key]) ?
+        result : result.concat(key);
+    }, []);
+
+    diff = _.without(diff, ["values", "colors"]);
+    if (diff.length === 0) {
+      this.progressBar.setColors(data.colors);
+      this.progressBar.setValues(data.values);
+      return;
+    }
 
     this.progressBar = new MV.ProgressBar( {
       values: data.values,
@@ -95,15 +106,20 @@ AFRAME.registerComponent('progress-radial', {
     gradient: { default: false }
   },
 
-  // TODO: if values or colors only updated lazily update
   update: function(oldData) {
     var data = this.data;
 
-    var d = _.reduce(data, function(result, value, key) {
-    return _.isEqual(value, oldData[key]) ?
+    var diff = _.reduce(data, function(result, value, key) {
+      return _.isEqual(value, oldData[key]) ?
         result : result.concat(key);
-}, []);
-    console.log(d);
+    }, []);
+
+    diff = _.without(diff, ["values", "colors"]);
+    if (diff.length === 0) {
+      this.progressBar.setColors(data.colors);
+      this.progressBar.setValues(data.values);
+      return;
+    }
 
     this.progressRadial = new MV.ProgressRadial( {
       values: data.values,

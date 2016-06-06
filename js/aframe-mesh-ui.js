@@ -14,7 +14,12 @@ AFRAME.registerComponent('progress-bar', {
     values: {
       default: '0.1',
       parse: function(value) {
-        return value.split(' ').map(parseFloat);
+        if (typeof value == 'string')
+          return value.split(' ').map(parseFloat);
+        else if (Array.isArray(value))
+          return value.map(parseFloat);
+        else
+          return [value];
       }
     },
     colors: {
@@ -71,7 +76,13 @@ AFRAME.registerComponent('progress-radial', {
     values: {
       default: '0.1',
       parse: function(value) {
-        return value.split(' ').map(parseFloat);
+        if (typeof value == 'string')
+          return value.split(' ').map(parseFloat);
+        else if (Array.isArray(value))
+          return value.map(parseFloat);
+        else {
+          return [parseFloat(value)];
+        }
       }
     },
     colors: {
@@ -102,8 +113,8 @@ AFRAME.registerComponent('progress-radial', {
 
     diff = _.without(diff, ["values", "colors"]);
     if (diff.length === 0) {
-      this.progressBar.setColors(data.colors);
-      this.progressBar.setValues(data.values);
+      this.progressRadial.setColors(data.colors);
+      this.progressRadial.setValues(data.values);
       return;
     }
 

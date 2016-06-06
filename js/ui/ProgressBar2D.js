@@ -2,6 +2,10 @@
 
 var MV = MV || {};
 
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
+}
+
 MV.ProgressBar2D = function(options) {
   this.options = _.defaults(options || {}, MV.ProgressBar2D.OPTIONS);
 
@@ -188,3 +192,7 @@ MV.ProgressBar2D.prototype._update = function() {
 MV.ProgressBar2D.prototype.update = function(dt) {
 
 };
+
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  module.exports = MV.ProgressBar2D;
+}

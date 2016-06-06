@@ -180,3 +180,7 @@ MV.ProgressRadial2D.prototype._update = function( ) {
 MV.ProgressRadial2D.prototype.update = function(dt) {
 
 };
+
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  module.exports = MV.ProgressBar2D;
+}

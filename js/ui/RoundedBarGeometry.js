@@ -72,3 +72,7 @@ MV.RoundedBarGeometry.prototype.clone = function () {
   );
 
 };
+
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  module.exports = MV.RoundedBarGeometry;
+}

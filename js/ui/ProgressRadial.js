@@ -152,3 +152,7 @@ MV.ProgressRadial.prototype._update = function() {
 MV.ProgressRadial.prototype.update = function(dt) {
 
 };
+
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  module.exports = MV.ProgressRadial;
+}

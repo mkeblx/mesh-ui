@@ -1,10 +1,10 @@
 {
   "name": "aframe-mesh-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "3D UI components for VR",
   "author": "Michael Blix <mkeblx@gmail.com>",
   "keywords": [
-    "aframe", "UI", "three.js", "progress bar", "3D"
+    "aframe", "UI", "three.js", "progress bar", "3D", "VR"
   ],
   "main": "dist/aframe-mesh-ui.bundle.js",
   "scripts": {

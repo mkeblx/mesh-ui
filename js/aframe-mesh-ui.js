@@ -28,8 +28,8 @@ AFRAME.registerComponent('progress-bar', {
         return value.split(' ');
       }
     },
-    bgColor: { default: '#666666' },
-    bg: { default: true },
+    backgroundColor: { default: '#666666' },
+    background: { default: true },
     width: { default: 1 },
     thickness: { default: 0.04 },
     rounded: { default: true },
@@ -54,6 +54,8 @@ AFRAME.registerComponent('progress-bar', {
     }
 
     this.progressBar = new MV.ProgressBar( {
+      bgColor: data.backgroundColor,
+      bg: data.background,
       values: data.values,
       colors: data.colors,
       width: data.width,
@@ -91,8 +93,8 @@ AFRAME.registerComponent('progress-radial', {
         return value.split(' ');
       }
     },
-    bgColor: { default: '#666666' },
-    bg: { default: true },
+    backgroundColor: { default: '#666666' },
+    background: { default: true },
     width: { default: 1 },
     thickness: { default: 0.04 },
     rounded: { default: true },
@@ -119,6 +121,8 @@ AFRAME.registerComponent('progress-radial', {
     }
 
     this.progressRadial = new MV.ProgressRadial( {
+      bgColor: data.backgroundColor,
+      bg: data.background,
       values: data.values,
       colors: data.colors,
       width: data.width,

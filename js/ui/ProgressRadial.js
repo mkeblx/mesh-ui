@@ -66,7 +66,7 @@ MV.ProgressRadial.prototype.init = function(options) {
   // TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)
   var geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
 
-  var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
   var mat = new MatType({
     map: this.texture,

@@ -64,7 +64,7 @@ MV.ProgressBar2D.prototype.init = function(options) {
   var texture = new THREE.Texture(canvas);
   this.texture = texture;
 
-  var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 
   var segs = options.segments;

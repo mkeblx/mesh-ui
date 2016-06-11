@@ -22,6 +22,7 @@ MV.ProgressRadial2D.OPTIONS = {
   thickness: 0.1,
   rounded: true,
   width: 1,
+  lit: false,
   segments: 52,
   arc: Math.PI*2,
   gradient: false
@@ -60,7 +61,10 @@ MV.ProgressRadial2D.prototype.init = function(options) {
 
   // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
   var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
-  var mat = new THREE.MeshBasicMaterial({
+
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+
+  var mat = new MatType({
     map: this.texture,
     transparent: !options.bg
   });

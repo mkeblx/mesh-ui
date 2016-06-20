@@ -79,7 +79,9 @@ MV.ProgressBar.prototype.init = function(options) {
 
   var mat = new MatType( {
     map: this.texture,
-    transparent: !options.bg
+    transparent: !options.bg,
+    roughness: 1,
+    metalness: 0
   } );
 
   var mesh = new THREE.Mesh(geo, mat);

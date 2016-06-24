@@ -2,7 +2,13 @@
 
 var MV = MV || {};
 
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.Progress = require('./Progress.js');
+}
+
 MV.ProgressRadial = function(options) {
+  MV.Progress.call(this);
+
   this.options = _.defaults(options || {}, MV.ProgressRadial.OPTIONS);
 
   this._colors = this.options.colors;
@@ -29,6 +35,8 @@ MV.ProgressRadial.OPTIONS = {
   gradient: false
 };
 
+MV.ProgressRadial.prototype = Object.create(MV.Progress.prototype);
+
 Object.defineProperties(MV.ProgressRadial.prototype, {
   'value': {
     get: function() {
@@ -45,8 +53,6 @@ Object.defineProperties(MV.ProgressRadial.prototype, {
 });
 
 MV.ProgressRadial.prototype.init = function(options) {
-  var container = new THREE.Group();
-
   var width = options.width;
 
   var canvas = document.createElement('canvas');
@@ -78,13 +84,7 @@ MV.ProgressRadial.prototype.init = function(options) {
   var mesh = new THREE.Mesh(geo, mat);
   mesh.rotation.set(0, Math.PI, Math.PI/2);
 
-  container.add(mesh);
-
-  this.container = container;
-};
-
-MV.ProgressRadial.prototype.getObject = function() {
-  return this.container;
+  this.group.add(mesh);
 };
 
 // set colors for parts

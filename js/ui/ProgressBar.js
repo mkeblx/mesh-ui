@@ -3,10 +3,13 @@
 var MV = MV || {};
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.Progress = require('./Progress.js');
   MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
 }
 
 MV.ProgressBar = function(options) {
+  MV.Progress.call(this);
+
   this.options = _.defaults(options || {}, MV.ProgressBar.OPTIONS);
 
   this._colors = this.options.colors;
@@ -30,6 +33,8 @@ MV.ProgressBar.OPTIONS = {
   gradient: false
 };
 
+MV.ProgressBar.prototype = Object.create(MV.Progress.prototype);
+
 Object.defineProperties(MV.ProgressBar.prototype, {
   'value': {
     get: function() {
@@ -45,9 +50,8 @@ Object.defineProperties(MV.ProgressBar.prototype, {
 });
 
 MV.ProgressBar.prototype.init = function(options) {
-  var group = new THREE.Object3D();
   var container = new THREE.Object3D();
-  group.add(container);
+  this.group.add(container);
 
   var width = options.width,
       thickness = options.thickness;
@@ -89,11 +93,6 @@ MV.ProgressBar.prototype.init = function(options) {
 
   this.mesh = mesh;
   this.container = container;
-  this.group = group;
-};
-
-MV.ProgressBar.prototype.getObject = function() {
-  return this.group;
 };
 
 // set colors for parts

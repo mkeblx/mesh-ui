@@ -3,10 +3,13 @@
 var MV = MV || {};
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.Progress = require('./Progress.js');
   MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
 }
 
 MV.ProgressBar2D = function(options) {
+  MV.Progress.call(this);
+
   this.options = _.defaults(options || {}, MV.ProgressBar2D.OPTIONS);
 
   this._colors = this.options.colors;
@@ -30,6 +33,8 @@ MV.ProgressBar2D.OPTIONS = {
   gradient: false
 };
 
+MV.ProgressBar2D.prototype = Object.create(MV.Progress.prototype);
+
 Object.defineProperties(MV.ProgressBar2D.prototype, {
   'value': {
     get: function() {
@@ -46,9 +51,8 @@ Object.defineProperties(MV.ProgressBar2D.prototype, {
 });
 
 MV.ProgressBar2D.prototype.init = function(options) {
-  var group = new THREE.Object3D();
   var container = new THREE.Object3D();
-  group.add(container);
+  this.group.add(container);
 
   var width = options.width,
       thickness = options.thickness;
@@ -120,11 +124,6 @@ MV.ProgressBar2D.prototype.init = function(options) {
 
   this.mesh = mesh;
   this.container = container;
-  this.group = group;
-};
-
-MV.ProgressBar2D.prototype.getObject = function() {
-  return this.group;
 };
 
 // set colors for parts

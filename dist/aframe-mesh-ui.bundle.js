@@ -257,7 +257,7 @@
 	  var texture = new THREE.Texture(canvas);
 	  this.texture = texture;
 
-	  var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
+	  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 
 	  var segs = options.segments;
@@ -273,7 +273,9 @@
 
 	  var mat = new MatType( {
 	    map: this.texture,
-	    transparent: !options.bg
+	    transparent: !options.bg,
+	    roughness: 1,
+	    metalness: 0
 	  } );
 
 	  var mesh = new THREE.Mesh(geo, mat);
@@ -535,7 +537,7 @@
 	  var texture = new THREE.Texture(canvas);
 	  this.texture = texture;
 
-	  var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
+	  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 
 	  var segs = options.segments;
@@ -549,7 +551,9 @@
 
 	  var mat = new MatType( {
 	    map: this.texture,
-	    transparent: !options.bg
+	    transparent: !options.bg,
+	    roughness: 1,
+	    metalness: 0
 	  } );
 
 	  var mesh = new THREE.Mesh(geo, mat);
@@ -821,11 +825,13 @@
 	  // TorusGeometry(radius, tube, radialSegments, tubularSegments, arc)
 	  var geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
 
-	  var MatType = options.lit ? THREE.MeshLambertMaterial : THREE.MeshBasicMaterial;
+	  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 	  var mat = new MatType({
 	    map: this.texture,
-	    transparent: !options.bg
+	    transparent: !options.bg,
+	    roughness: 1,
+	    metalness: 0
 	  });
 
 	  var mesh = new THREE.Mesh(geo, mat);
@@ -941,6 +947,7 @@
 	  thickness: 0.1,
 	  rounded: true,
 	  width: 1,
+	  lit: false,
 	  segments: 52,
 	  arc: Math.PI*2,
 	  gradient: false
@@ -979,9 +986,14 @@
 
 	  // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
 	  var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
-	  var mat = new THREE.MeshBasicMaterial({
+
+	  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+
+	  var mat = new MatType({
 	    map: this.texture,
-	    transparent: !options.bg
+	    transparent: !options.bg,
+	    roughness: 1,
+	    metalness: 0
 	  });
 
 	  var mesh = new THREE.Mesh(geo, mat);

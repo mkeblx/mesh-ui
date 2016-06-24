@@ -16,6 +16,42 @@ MV.Progress.prototype.getObject = function() {
   return this.group;
 };
 
+// draw segments & gradients
+MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
+  var w = canvas.width, h = canvas.height;
+
+  if (!opts.bg) {
+    ctx.clearRect( 0,0, w,h );
+  } else {
+    ctx.fillStyle = opts.bgColor;
+    ctx.fillRect( 0,0, w,h );
+  }
+
+  if (opts.gradient && colors.length > 1) {
+    var grd = ctx.createLinearGradient( 0,0, w,h );
+    grd.addColorStop(0, colors[0]);
+    grd.addColorStop(1, colors[1]);
+
+    ctx.fillStyle = grd;
+    ctx.fillRect( 0,0, w,h );
+
+    ctx.fillStyle = opts.bgColor;
+    ctx.fillRect( w*vals[0],0, w,h );
+  } else {
+    if (vals.length && vals.length <= this._colors.length) {
+      var start = 0;
+
+      for (var i = 0; i < vals.length; i++) {
+        var val = vals[i];
+
+        ctx.fillStyle = colors[i];
+        ctx.fillRect( w*start,0, w*val,h );
+
+        start += val;
+      }
+    }
+  }
+};
 
 MV.Progress.prototype._update = function(pc) {
 

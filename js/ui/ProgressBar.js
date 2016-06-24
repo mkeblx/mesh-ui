@@ -124,6 +124,9 @@ MV.ProgressBar.prototype._update = function() {
   var vals = this._values;
   var w = this.canvas.width, h = this.canvas.height;
 
+  // todo: modify mesh UVs to make this work
+  //this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
+
   if (!opts.bg) {
     ctx.clearRect( 0,0, w,h );
   } else {

@@ -111,42 +111,7 @@ MV.ProgressRadial.prototype.setValues = function( arr ) {
 };
 
 MV.ProgressRadial.prototype._update = function() {
-  var opts = this.options;
-  var ctx = this.ctx;
-  var vals = this._values;
-  var w = this.canvas.width, h = this.canvas.height;
-
-  if (!opts.bg) {
-    ctx.clearRect( 0,0, w,h );
-  } else {
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( 0,0, w,h );
-  }
-
-  if (opts.gradient && this._colors.length > 1) {
-    var grd = ctx.createLinearGradient( 0,0, w,h );
-    grd.addColorStop(0, this._colors[0]);
-    grd.addColorStop(1, this._colors[1]);
-
-    ctx.fillStyle = grd;
-    ctx.fillRect( 0,0, w,h );
-
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( w*vals[0],0, w,h );
-  } else {
-    if (vals.length && vals.length <= this._colors.length) {
-      var start = 0;
-
-      for (var i = 0; i < vals.length; i++) {
-        var val = vals[i];
-
-        ctx.fillStyle = this._colors[i];
-        ctx.fillRect( w*start,0, w*val,h );
-
-        start += val;
-      }
-    }
-  }
+  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;
 };

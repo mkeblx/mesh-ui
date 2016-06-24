@@ -82,7 +82,8 @@ function setupWorld() {
   progressBar = new MV.ProgressBar2D( {
     width: 1,
     thickness: 0.04,
-    rounded: true } );
+    rounded: true,
+    gradient: false } );
   //progressBar.getObject().rotation.set(0.3,1,0.3);
   progressBarGroup.add( progressBar.getObject() );
 
@@ -111,7 +112,8 @@ function setupWorld() {
     width: 1,
     thickness: 0.04,
     rounded: true,
-    lit: true } );
+    lit: true,
+    gradient: false } );
   progressBar3D.getObject().position.set(0, -0.07, 0);
   progressBarGroup.add( progressBar3D.getObject() );
 
@@ -127,7 +129,8 @@ function setupWorld() {
     width: 1,
     thickness: 0.04,
     rounded: true,
-    lit: true
+    lit: true,
+    gradient: false
      } );
 
   progressRadial.setColors(colors);
@@ -155,7 +158,8 @@ function setupWorld() {
     width: 1,
     thickness: 0.04,
     rounded: true,
-    lit: true
+    lit: true,
+    gradient: false
      } );
 
   progressRadial3D.setColors(colors);
@@ -197,6 +201,11 @@ function setupEvents() {
     console.log(event.keyCode);
     if (event.keyCode == 82) { // R
       buttonClick();
+    } else if (event.keyCode == 71) { // G
+      progressBar.options.gradient = !progressBar.options.gradient;
+      progressBar3D.options.gradient = !progressBar3D.options.gradient;
+      progressRadial.options.gradient = !progressRadial.options.gradient;
+      progressRadial3D.options.gradient = !progressRadial3D.options.gradient;
     }
   }, false );
 

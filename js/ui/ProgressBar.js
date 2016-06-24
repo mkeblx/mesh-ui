@@ -122,6 +122,7 @@ MV.ProgressBar.prototype._update = function() {
   var opts = this.options;
   var ctx = this.ctx;
   var vals = this._values;
+  var colors = this._colors;
   var w = this.canvas.width, h = this.canvas.height;
 
   // todo: modify mesh UVs to make this work
@@ -134,10 +135,12 @@ MV.ProgressBar.prototype._update = function() {
     ctx.fillRect( 0,0, w,h );
   }
 
-  if (opts.gradient && this._colors.length > 1) {
+  if (opts.gradient && colors.length > 1) {
     var grd = ctx.createLinearGradient( 0,0, w,h );
-    grd.addColorStop(0, this._colors[0]);
-    grd.addColorStop(1, this._colors[1]);
+    for (var i = 0; i < colors.length; i++) {
+      var stop = (1/(colors.length-1))*i;
+      grd.addColorStop(stop, colors[i]);
+    }
 
     ctx.fillStyle = grd;
     ctx.fillRect( 0,0, w,h );
@@ -145,13 +148,13 @@ MV.ProgressBar.prototype._update = function() {
     ctx.fillStyle = opts.bgColor;
     ctx.fillRect( 0,h*vals[0], w,h );
   } else {
-    if (vals.length && vals.length <= this._colors.length) {
+    if (vals.length && vals.length <= colors.length) {
       var start = 0;
 
       for (var i = 0; i < vals.length; i++) {
         var val = vals[i];
 
-        ctx.fillStyle = this._colors[i];
+        ctx.fillStyle = colors[i];
         ctx.fillRect( 0,h*start, w,h*val );
 
         start += val;

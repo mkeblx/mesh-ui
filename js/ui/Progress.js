@@ -29,8 +29,10 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
 
   if (opts.gradient && colors.length > 1) {
     var grd = ctx.createLinearGradient( 0,0, w,h );
-    grd.addColorStop(0, colors[0]);
-    grd.addColorStop(1, colors[1]);
+    for (var i = 0; i < colors.length; i++) {
+      var stop = (1/(colors.length-1))*i;
+      grd.addColorStop(stop, colors[i]);
+    }
 
     ctx.fillStyle = grd;
     ctx.fillRect( 0,0, w,h );

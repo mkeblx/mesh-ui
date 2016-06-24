@@ -194,7 +194,7 @@ MV.ProgressBar2D.prototype._update = function() {
 };
 
 MV.ProgressBar2D.prototype.update = function(dt) {
-
+  this._update();
 };
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {

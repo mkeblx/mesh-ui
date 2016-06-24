@@ -206,6 +206,11 @@ function setupEvents() {
       progressBar3D.options.gradient = !progressBar3D.options.gradient;
       progressRadial.options.gradient = !progressRadial.options.gradient;
       progressRadial3D.options.gradient = !progressRadial3D.options.gradient;
+
+      progressBar.update();
+      progressBar3D.update();
+      progressRadial.update();
+      progressRadial3D.update();
     }
   }, false );
 

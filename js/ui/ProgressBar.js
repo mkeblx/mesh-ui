@@ -187,7 +187,7 @@ MV.ProgressBar.prototype._update = function() {
 };
 
 MV.ProgressBar.prototype.update = function(dt) {
-
+  this._update();
 };
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {

@@ -117,7 +117,7 @@ MV.ProgressRadial.prototype._update = function() {
 };
 
 MV.ProgressRadial.prototype.update = function(dt) {
-
+  this._update();
 };
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {

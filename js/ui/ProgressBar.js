@@ -57,8 +57,8 @@ MV.ProgressBar.prototype.init = function(options) {
       thickness = options.thickness;
 
   var canvas = document.createElement('canvas');
-  canvas.width = 2;
-  canvas.height = 1024;
+  canvas.width = 1024;
+  canvas.height = 2;
   this.canvas = canvas;
 
   var ctx = canvas.getContext('2d');
@@ -125,42 +125,7 @@ MV.ProgressBar.prototype._update = function() {
   var colors = this._colors;
   var w = this.canvas.width, h = this.canvas.height;
 
-  // todo: modify mesh UVs to make this work
-  //this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
-
-  if (!opts.bg) {
-    ctx.clearRect( 0,0, w,h );
-  } else {
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( 0,0, w,h );
-  }
-
-  if (opts.gradient && colors.length > 1) {
-    var grd = ctx.createLinearGradient( 0,0, w,h );
-    for (var i = 0; i < colors.length; i++) {
-      var stop = (1/(colors.length-1))*i;
-      grd.addColorStop(stop, colors[i]);
-    }
-
-    ctx.fillStyle = grd;
-    ctx.fillRect( 0,0, w,h );
-
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( 0,h*vals[0], w,h );
-  } else {
-    if (vals.length && vals.length <= colors.length) {
-      var start = 0;
-
-      for (var i = 0; i < vals.length; i++) {
-        var val = vals[i];
-
-        ctx.fillStyle = colors[i];
-        ctx.fillRect( 0,h*start, w,h*val );
-
-        start += val;
-      }
-    }
-  }
+  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;
 

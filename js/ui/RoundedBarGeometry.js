@@ -32,6 +32,8 @@ MV.RoundedBarGeometry = function ( width, size, segments ) {
 
   //this.mergeVertices(); // align better
 
+  this.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
+
   this.computeBoundingBox();
   var max = this.boundingBox.max,
       min = this.boundingBox.min;
@@ -50,8 +52,6 @@ MV.RoundedBarGeometry = function ( width, size, segments ) {
   }
 
   this.uvsNeedUpdate = true;
-
-  this.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
 
   this.computeFaceNormals();
   this.computeVertexNormals();

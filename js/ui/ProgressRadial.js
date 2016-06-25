@@ -37,21 +37,6 @@ MV.ProgressRadial.OPTIONS = {
 
 MV.ProgressRadial.prototype = Object.create(MV.Progress.prototype);
 
-Object.defineProperties(MV.ProgressRadial.prototype, {
-  'value': {
-    get: function() {
-      return this._values.length ? this._values[0] : 0;
-    },
-    set: function(val) {
-      if (val !== this._value) {
-        val = THREE.Math.clamp( val, 0, 1 );
-        this.setValues( [ val ] );
-        this._update( );
-      }
-    }
-  }
-});
-
 MV.ProgressRadial.prototype.init = function(options) {
   var width = options.width;
 
@@ -85,29 +70,6 @@ MV.ProgressRadial.prototype.init = function(options) {
   mesh.rotation.set(0, Math.PI, Math.PI/2);
 
   this.group.add(mesh);
-};
-
-// set colors for parts
-// arr: array of color strings
-MV.ProgressRadial.prototype.setColors = function( arr ) {
-  this._colors = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._colors.push( arr[i] );
-  }
-};
-
-// set multiple values to display
-// arr: array of values where values sum to <=1
-// e.g. [ 0.3, 0.1, 0.6 ]
-MV.ProgressRadial.prototype.setValues = function( arr ) {
-  this._values = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._values.push( arr[i] );
-  }
-
-  this._update();
 };
 
 MV.ProgressRadial.prototype._update = function() {

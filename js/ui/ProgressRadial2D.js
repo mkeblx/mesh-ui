@@ -81,30 +81,6 @@ MV.ProgressRadial2D.prototype.init = function(options) {
   this.group.add(mesh);
 };
 
-
-// set colors for parts
-// arr: array of color strings
-MV.ProgressRadial2D.prototype.setColors = function( arr ) {
-  this._colors = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._colors.push( arr[i] );
-  }
-};
-
-// set multiple values to display
-// arr: array of values where values sum to <=1
-// e.g. [ 0.3, 0.1, 0.6 ]
-MV.ProgressRadial2D.prototype.setValues = function( arr ) {
-  this._values = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._values.push( arr[i] );
-  }
-
-  this._update();
-};
-
 MV.ProgressRadial2D.prototype._update = function( ) {
   var ctx = this.ctx;
   var opts = this.options;

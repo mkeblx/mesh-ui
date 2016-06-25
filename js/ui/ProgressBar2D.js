@@ -126,69 +126,8 @@ MV.ProgressBar2D.prototype.init = function(options) {
   this.container = container;
 };
 
-// set colors for parts
-// arr: array of color strings
-MV.ProgressBar2D.prototype.setColors = function( arr ) {
-  this._colors = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._colors.push( arr[i] );
-  }
-};
-
-// set multiple values to display
-// arr: array of values where values sum to <=1
-// e.g. [ 0.3, 0.1, 0.6 ]
-MV.ProgressBar2D.prototype.setValues = function( arr ) {
-  this._values = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._values.push( arr[i] );
-  }
-
-  this._update();
-};
-
 MV.ProgressBar2D.prototype._update = function() {
-  var opts = this.options;
-  var ctx = this.ctx;
-  var vals = this._values;
-  var colors = this._colors;
-  var w = this.canvas.width, h = this.canvas.height;
-
-  if (!opts.bg) {
-    ctx.clearRect( 0,0, w,h );
-  } else {
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( 0,0, w,h );
-  }
-
-  if (opts.gradient && colors.length > 1) {
-    var grd = ctx.createLinearGradient( 0,0, w,h );
-    for (var i = 0; i < colors.length; i++) {
-      var stop = (1/(colors.length-1))*i;
-      grd.addColorStop(stop, colors[i]);
-    }
-
-    ctx.fillStyle = grd;
-    ctx.fillRect( 0,0, w,h );
-
-    ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( w*vals[0],0, w,h );
-  } else {
-    if (vals.length && vals.length <= colors.length) {
-      var start = 0;
-
-      for (var i = 0; i < vals.length; i++) {
-        var val = vals[i];
-
-        ctx.fillStyle = colors[i];
-        ctx.fillRect( w*start,0, w*val,h );
-
-        start += val;
-      }
-    }
-  }
+  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;
 };

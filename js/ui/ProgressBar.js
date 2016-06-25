@@ -35,20 +35,6 @@ MV.ProgressBar.OPTIONS = {
 
 MV.ProgressBar.prototype = Object.create(MV.Progress.prototype);
 
-Object.defineProperties(MV.ProgressBar.prototype, {
-  'value': {
-    get: function() {
-      return this._values.length ? this._values[0] : 0;
-    },
-    set: function( val ) {
-      if ( val !== this._value ) {
-        //this._value = THREE.Math.clamp( val, 0, 1 );
-        //this._update( );
-      }
-    }
-  }
-});
-
 MV.ProgressBar.prototype.init = function(options) {
   var container = new THREE.Object3D();
   this.group.add(container);
@@ -95,36 +81,7 @@ MV.ProgressBar.prototype.init = function(options) {
   this.container = container;
 };
 
-// set colors for parts
-// arr: array of color strings
-MV.ProgressBar.prototype.setColors = function( arr ) {
-  this._colors = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._colors.push( arr[i] );
-  }
-};
-
-// set multiple values to display
-// arr: array of values where values sum to <=1
-// e.g. [ 0.3, 0.1, 0.6 ]
-MV.ProgressBar.prototype.setValues = function( arr ) {
-  this._values = [];
-
-  for (var i = 0; i < arr.length; i++) {
-    this._values.push( arr[i] );
-  }
-
-  this._update();
-};
-
 MV.ProgressBar.prototype._update = function() {
-  var opts = this.options;
-  var ctx = this.ctx;
-  var vals = this._values;
-  var colors = this._colors;
-  var w = this.canvas.width, h = this.canvas.height;
-
   this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;

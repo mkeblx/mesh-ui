@@ -16,6 +16,29 @@ MV.Progress.prototype.getObject = function() {
   return this.group;
 };
 
+// set colors for parts
+// arr: array of color strings
+MV.Progress.prototype.setColors = function(arr) {
+  this._colors = [];
+
+  for (var i = 0; i < arr.length; i++) {
+    this._colors.push( arr[i] );
+  }
+};
+
+// set multiple values to display
+// arr: array of values where values sum to <=1
+// e.g. [ 0.3, 0.1, 0.6 ]
+MV.Progress.prototype.setValues = function(arr)  {
+  this._values = [];
+
+  for (var i = 0; i < arr.length; i++) {
+    this._values.push( arr[i] );
+  }
+
+  this._update();
+};
+
 // draw segments & gradients
 MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   var w = canvas.width, h = canvas.height;

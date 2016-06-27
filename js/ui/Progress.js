@@ -51,7 +51,7 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   }
 
   if (opts.gradient && colors.length > 1) {
-    var grd = ctx.createLinearGradient( 0,0, w,h );
+    var grd = ctx.createLinearGradient( 0,0, w,0 );
     for (var i = 0; i < colors.length; i++) {
       var stop = (1/(colors.length-1))*i;
       grd.addColorStop(stop, colors[i]);
@@ -63,7 +63,7 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
     ctx.fillStyle = opts.bgColor;
     ctx.fillRect( w*vals[0],0, w,h );
   } else {
-    if (vals.length && vals.length <= this._colors.length) {
+    if (vals.length && vals.length <= colors.length) {
       var start = 0;
 
       for (var i = 0; i < vals.length; i++) {

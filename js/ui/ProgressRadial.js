@@ -16,7 +16,6 @@ MV.ProgressRadial = function(options) {
 
   this.init(this.options);
 
-  //this.value = this.options.values[0];
   this._update();
 };
 

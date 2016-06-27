@@ -39,16 +39,18 @@ MV.RoundedBarGeometry = function ( width, size, segments ) {
       min = this.boundingBox.min;
   var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
   var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+
   this.faceVertexUvs[0] = [];
   for (var i = 0; i < this.faces.length; i++) {
-    var v1 = this.vertices[this.faces[i].a], v2 = this.vertices[this.faces[i].b], v3 = this.vertices[this.faces[i].c];
+    var v1 = this.vertices[this.faces[i].a],
+        v2 = this.vertices[this.faces[i].b],
+        v3 = this.vertices[this.faces[i].c];
     this.faceVertexUvs[0].push(
       [
-          new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
-          new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
-          new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+        new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+        new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+        new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
       ]);
-
   }
 
   this.uvsNeedUpdate = true;

@@ -35,21 +35,6 @@ MV.ProgressBar2D.OPTIONS = {
 
 MV.ProgressBar2D.prototype = Object.create(MV.Progress.prototype);
 
-Object.defineProperties(MV.ProgressBar2D.prototype, {
-  'value': {
-    get: function() {
-      return this._values.length ? this._values[0] : 0;
-    },
-    set: function(val) {
-      if (val !== this._value) {
-        val = THREE.Math.clamp( val, 0, 1 );
-        this.setValues( [ val ] );
-        this._update( );
-      }
-    }
-  }
-});
-
 MV.ProgressBar2D.prototype.init = function(options) {
   var container = new THREE.Object3D();
   this.group.add(container);

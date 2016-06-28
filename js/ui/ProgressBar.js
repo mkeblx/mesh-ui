@@ -4,7 +4,6 @@ var MV = MV || {};
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
   MV.Progress = require('./Progress.js');
-  MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
 }
 
 MV.ProgressBar = function(options) {
@@ -26,7 +25,7 @@ MV.ProgressBar.OPTIONS = {
   values: [0],
   bg: true,
   width: 1,
-  thickness: 0.04,
+  thickness: 0.05,
   rounded: true,
   lit: false,
   segments: 16,
@@ -43,27 +42,6 @@ MV.ProgressBar.prototype._update = function() {
   this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;
-
-  /* else {
-    var colorL, colorR;
-
-    if (pc === 1) {
-      colorL = opts.activeColor;
-      colorR = opts.activeColor;
-    } else if (pc !== 0) {
-      colorL = opts.activeColor;
-      colorR = opts.bgColor;
-    } else { // pc === 0
-      colorL = opts.bgColor;
-      colorR = opts.bgColor;
-    }
-
-    this.matL.color.setStyle( colorL );
-    this.matR.color.setStyle( colorR );
-  }*/
-
-  //this.progressC.scale.setX(pc);
-  //this.seekC.scale.setX(1-pc);
 };
 
 MV.ProgressBar.prototype.update = function(dt) {

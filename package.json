@@ -1,14 +1,19 @@
 {
-  "name": "aframe-mesh-ui",
-  "version": "0.1.2",
+  "name": "mesh-ui",
+  "version": "0.1.0",
   "description": "3D UI components for VR",
   "author": "Michael Blix <mkeblx@gmail.com>",
   "keywords": [
-    "aframe", "UI", "three.js", "progress bar", "3D", "VR"
+    "UI",
+    "three.js",
+    "progress bar",
+    "3D",
+    "VR"
   ],
-  "main": "dist/aframe-mesh-ui.bundle.js",
+  "main": "dist/mesh-ui.bundle.js",
   "scripts": {
-    "dist": "webpack js/aframe-mesh-ui.js dist/aframe-mesh-ui.bundle.js"
+    "dist": "webpack js/mesh-ui.js dist/mesh-ui.bundle.js",
+    "aframe": "webpack js/aframe-mesh-ui.js dist/aframe-mesh-ui.bundle.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +27,9 @@
   "devDependencies": {
     "browserify": "^13.0.0",
     "script-loader": "^0.7.0",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "lodash.defaults": "^4.0.1"
+  },
+  "dependencies": {
   }
 }

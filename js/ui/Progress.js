@@ -2,6 +2,10 @@
 
 var MV = MV || {};
 
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
+}
+
 MV.Progress = function(options) {
   //this.options = _.defaults(options || {}, MV.Progress.OPTIONS);
 
@@ -19,16 +23,13 @@ MV.Progress.prototype._init = function(options, type) {
   var width = options.width,
       thickness = options.thickness;
 
-  var canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 2;
-  this.canvas = canvas;
+  this.canvas = document.createElement('canvas');
+  this.canvas.width = 1024;
+  this.canvas.height = 2;
 
-  var ctx = canvas.getContext('2d');
-  this.ctx = ctx;
+  this.ctx = this.canvas.getContext('2d');
 
-  var texture = new THREE.Texture(canvas);
-  this.texture = texture;
+  this.texture = new THREE.Texture(this.canvas);
 
   var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
@@ -68,7 +69,6 @@ MV.Progress.prototype._init = function(options, type) {
 
   this.mesh = mesh;
   this.container = container;
-
 };
 
 MV.Progress.prototype.getObject = function() {

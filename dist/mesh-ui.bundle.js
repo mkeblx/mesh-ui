@@ -44,149 +44,20 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MV = MV || {};
+	// mesh-ui
 
-	MV.ProgressBar = __webpack_require__(1);
-	MV.ProgressBar2D = __webpack_require__(4);
-	MV.ProgressRadial = __webpack_require__(6);
-	MV.ProgressRadial2D = __webpack_require__(7);
+	var K  = {};
 
-	if (typeof AFRAME === 'undefined') {
-	  throw new Error('Component attempted to register before AFRAME was available.');
-	}
-
-	AFRAME.registerComponent('progress-bar', {
-	  schema: {
-	    values: {
-	      default: '0.1',
-	      parse: function(value) {
-	        if (typeof value == 'string')
-	          return value.split(' ').map(parseFloat);
-	        else if (Array.isArray(value))
-	          return value.map(parseFloat);
-	        else
-	          return [value];
-	      }
-	    },
-	    colors: {
-	      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
-	      parse: function(value) {
-	        return value.split(' ');
-	      }
-	    },
-	    backgroundColor: { default: '#666666' },
-	    background: { default: true },
-	    width: { default: 1 },
-	    thickness: { default: 0.04 },
-	    rounded: { default: true },
-	    lit: { default: false },
-	    segments: { default: 16 },
-	    gradient: { default: false }
-	  },
-
-	  update: function(oldData) {
-	    var data = this.data;
-
-	    var diff = _.reduce(data, function(result, value, key) {
-	      return _.isEqual(value, oldData[key]) ?
-	        result : result.concat(key);
-	    }, []);
-
-	    diff = _.without(diff, ["values", "colors"]);
-	    if (diff.length === 0) {
-	      this.progressBar.setColors(data.colors);
-	      this.progressBar.setValues(data.values);
-	      return;
-	    }
-
-	    this.progressBar = new MV.ProgressBar( {
-	      bgColor: data.backgroundColor,
-	      bg: data.background,
-	      values: data.values,
-	      colors: data.colors,
-	      width: data.width,
-	      thickness: data.thickness,
-	      rounded: data.rounded,
-	      lit: data.lit,
-	      segments: data.segments,
-	      gradient: data.gradient } );
-
-	    this.el.setObject3D('mesh', this.progressBar.getObject());
-	  },
-
-	  remove: function() {
-	    this.el.removeObject3D('mesh');
-	  }
-	});
-
-	AFRAME.registerComponent('progress-radial', {
-	  schema: {
-	    values: {
-	      default: '0.1',
-	      parse: function(value) {
-	        if (typeof value == 'string')
-	          return value.split(' ').map(parseFloat);
-	        else if (Array.isArray(value))
-	          return value.map(parseFloat);
-	        else {
-	          return [parseFloat(value)];
-	        }
-	      }
-	    },
-	    colors: {
-	      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
-	      parse: function(value) {
-	        return value.split(' ');
-	      }
-	    },
-	    backgroundColor: { default: '#666666' },
-	    background: { default: true },
-	    width: { default: 1 },
-	    thickness: { default: 0.04 },
-	    rounded: { default: true },
-	    lit: { default: false },
-	    segments: { default: 52 },
-	    radialSegments: { default: 24 },
-	    arc: { default: Math.PI*2 },
-	    gradient: { default: false }
-	  },
-
-	  update: function(oldData) {
-	    var data = this.data;
-
-	    var diff = _.reduce(data, function(result, value, key) {
-	      return _.isEqual(value, oldData[key]) ?
-	        result : result.concat(key);
-	    }, []);
-
-	    diff = _.without(diff, ["values", "colors"]);
-	    if (diff.length === 0) {
-	      this.progressRadial.setColors(data.colors);
-	      this.progressRadial.setValues(data.values);
-	      return;
-	    }
-
-	    this.progressRadial = new MV.ProgressRadial( {
-	      bgColor: data.backgroundColor,
-	      bg: data.background,
-	      values: data.values,
-	      colors: data.colors,
-	      width: data.width,
-	      thickness: data.thickness,
-	      rounded: data.rounded,
-	      lit: data.lit,
-	      segments: data.segments,
-	      gradient: data.gradient } );
-
-	    this.el.setObject3D('mesh', this.progressRadial.getObject());
-	  },
-
-	  remove: function() {
-	    this.el.removeObject3D('mesh');
-	  }
-	});
+	//var MV = window.MV || {};
 
 
+	K.Progress = __webpack_require__(1);
+	K.ProgressBar = __webpack_require__(3);
+	K.ProgressBar2D = __webpack_require__(4);
+	K.ProgressRadial = __webpack_require__(6);
+	K.ProgressRadial2D = __webpack_require__(7);
+
+	window.MV = K;
 
 /***/ },
 /* 1 */
@@ -197,65 +68,7 @@
 	var MV = MV || {};
 
 	if ( true ) {
-	  MV.Progress = __webpack_require__(2);
-	}
-
-	MV.ProgressBar = function(options) {
-	  MV.Progress.call(this);
-
-	  this.options = _.defaults(options || {}, MV.ProgressBar.OPTIONS);
-
-	  this._colors = this.options.colors;
-	  this._values = this.options.values;
-
-	  this.init(this.options);
-
-	  this._update();
-	};
-
-	MV.ProgressBar.OPTIONS = {
-	  bgColor: '#666666',
-	  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
-	  values: [0],
-	  bg: true,
-	  width: 1,
-	  thickness: 0.05,
-	  rounded: true,
-	  lit: false,
-	  segments: 16,
-	  gradient: false
-	};
-
-	MV.ProgressBar.prototype = Object.create(MV.Progress.prototype);
-
-	MV.ProgressBar.prototype.init = function(options) {
-	  this._init(options, 'bar');
-	};
-
-	MV.ProgressBar.prototype._update = function() {
-	  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
-
-	  this.texture.needsUpdate = true;
-	};
-
-	MV.ProgressBar.prototype.update = function(dt) {
-	  this._update();
-	};
-
-	if ( true ) {
-	  module.exports = MV.ProgressBar;
-	}
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var MV = MV || {};
-
-	if ( true ) {
-	  MV.RoundedBarGeometry = __webpack_require__(3);
+	  MV.RoundedBarGeometry = __webpack_require__(2);
 	}
 
 	MV.Progress = function(options) {
@@ -403,7 +216,7 @@
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -489,6 +302,64 @@
 
 
 /***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var MV = MV || {};
+
+	if ( true ) {
+	  MV.Progress = __webpack_require__(1);
+	}
+
+	MV.ProgressBar = function(options) {
+	  MV.Progress.call(this);
+
+	  this.options = _.defaults(options || {}, MV.ProgressBar.OPTIONS);
+
+	  this._colors = this.options.colors;
+	  this._values = this.options.values;
+
+	  this.init(this.options);
+
+	  this._update();
+	};
+
+	MV.ProgressBar.OPTIONS = {
+	  bgColor: '#666666',
+	  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+	  values: [0],
+	  bg: true,
+	  width: 1,
+	  thickness: 0.05,
+	  rounded: true,
+	  lit: false,
+	  segments: 16,
+	  gradient: false
+	};
+
+	MV.ProgressBar.prototype = Object.create(MV.Progress.prototype);
+
+	MV.ProgressBar.prototype.init = function(options) {
+	  this._init(options, 'bar');
+	};
+
+	MV.ProgressBar.prototype._update = function() {
+	  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
+
+	  this.texture.needsUpdate = true;
+	};
+
+	MV.ProgressBar.prototype.update = function(dt) {
+	  this._update();
+	};
+
+	if ( true ) {
+	  module.exports = MV.ProgressBar;
+	}
+
+/***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -497,7 +368,7 @@
 	var MV = MV || {};
 
 	if ( true ) {
-	  MV.Progress = __webpack_require__(2);
+	  MV.Progress = __webpack_require__(1);
 	  MV.RoundedBarGeometry2D = __webpack_require__(5);
 	}
 
@@ -709,7 +580,7 @@
 	var MV = MV || {};
 
 	if ( true ) {
-	  MV.Progress = __webpack_require__(2);
+	  MV.Progress = __webpack_require__(1);
 	}
 
 	MV.ProgressRadial = function(options) {
@@ -770,7 +641,7 @@
 	var MV = MV || {};
 
 	if ( true ) {
-	  MV.Progress = __webpack_require__(2);
+	  MV.Progress = __webpack_require__(1);
 	}
 
 	MV.ProgressRadial2D = function(options) {

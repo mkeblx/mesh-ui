@@ -12,6 +12,65 @@ MV.Progress.OPTIONS = {
 
 };
 
+MV.Progress.prototype._init = function(options, type) {
+  var container = new THREE.Object3D();
+  this.group.add(container);
+
+  var width = options.width,
+      thickness = options.thickness;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 2;
+  this.canvas = canvas;
+
+  var ctx = canvas.getContext('2d');
+  this.ctx = ctx;
+
+  var texture = new THREE.Texture(canvas);
+  this.texture = texture;
+
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+
+
+  var segs = options.segments;
+  var radius = thickness/2;
+
+  var geo;
+
+  if (type == 'bar') {
+    if (options.rounded) {
+      geo = new MV.RoundedBarGeometry(width, thickness, segs);
+    } else {
+      geo = new THREE.CylinderGeometry(radius, radius, width, segs, 1, true);
+      geo.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
+    }
+  } else { // radial
+    var tubeDiameter = thickness / 2;
+    var radius = (width-thickness) / 2;
+
+    geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+    // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
+  }
+
+  var mat = new MatType( {
+    map: this.texture,
+    transparent: !options.bg,
+    roughness: 1,
+    metalness: 0
+  } );
+
+  var mesh = new THREE.Mesh(geo, mat);
+  container.add(mesh);
+
+  if (type == 'radial')
+    mesh.rotation.set(0, Math.PI, Math.PI/2);
+
+  this.mesh = mesh;
+  this.container = container;
+
+};
+
 MV.Progress.prototype.getObject = function() {
   return this.group;
 };

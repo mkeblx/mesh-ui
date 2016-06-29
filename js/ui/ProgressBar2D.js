@@ -8,7 +8,7 @@ if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
 }
 
 MV.ProgressBar2D = function(options) {
-  MV.Progress.call(this);
+  MV.Progress.call(this, options);
 
   this.options = _.defaults(options || {}, MV.ProgressBar2D.OPTIONS);
 

@@ -79,7 +79,8 @@ function setupWorld() {
 
   var progressBarGroup = new THREE.Group();
 
-  progressBar = new MV.ProgressBar2D( {
+  progressBar = new MV.Progress( {
+    type: 'bar-2d',
     width: 1,
     thickness: 0.04,
     rounded: true,
@@ -108,7 +109,8 @@ function setupWorld() {
   scene.add(progressBarGroup);
 
   // 3D
-  progressBar3D = new MV.ProgressBar( {
+  progressBar3D = new MV.Progress( {
+    type: 'bar',
     width: 1,
     thickness: 0.04,
     rounded: true,
@@ -125,7 +127,8 @@ function setupWorld() {
 
   // ProgressRadial
   var progressRadialGroup = new THREE.Group();
-  progressRadial = new MV.ProgressRadial2D( {
+  progressRadial = new MV.Progress( {
+    type: 'radial-2d',
     width: 1,
     thickness: 0.04,
     rounded: true,
@@ -154,7 +157,8 @@ function setupWorld() {
   scene.add(progressRadialGroup);
 
   // 3D
-  progressRadial3D = new MV.ProgressRadial( {
+  progressRadial3D = new MV.Progress( {
+    type: 'radial',
     width: 1,
     thickness: 0.04,
     rounded: true,

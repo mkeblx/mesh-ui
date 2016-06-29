@@ -4,19 +4,53 @@ var MV = MV || {};
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
   MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
+  MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
 }
 
 MV.Progress = function(options) {
-  //this.options = _.defaults(options || {}, MV.Progress.OPTIONS);
+  this.options = _.defaults(options || {}, MV.Progress.OPTIONS);
+  var opts = (this.options.type == 'bar' || this.options.type == 'bar-2d')
+    ? MV.Progress.BAR_OPTIONS : MV.Progress.RADIAL_OPTIONS;
+  this.options = _.defaults(this.options || {}, opts);
 
   this.group = new THREE.Object3D();
+
+  this._colors = this.options.colors;
+  this._values = this.options.values;
+
+  if (this.options.type == 'radial-2d')
+    this.__init(this.options);
+  else
+    this.init(this.options);
+
+  this._update();
 };
 
 MV.Progress.OPTIONS = {
-
+  type: 'bar',
+  bgColor: '#666666',
+  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+  values: [0],
+  bg: true,
+  width: 1,
+  lit: false,
+  rounded: true,
+  gradient: false
 };
 
-MV.Progress.prototype._init = function(options, type) {
+MV.Progress.BAR_OPTIONS = {
+  thickness: 0.05,
+  segments: 16
+};
+
+MV.Progress.RADIAL_OPTIONS = {
+  thickness: 0.1,
+  segments: 52,
+  radialSegments: 24,
+  arc: Math.PI*2
+};
+
+MV.Progress.prototype.init = function(options) {
   var container = new THREE.Object3D();
   this.group.add(container);
 
@@ -39,12 +73,18 @@ MV.Progress.prototype._init = function(options, type) {
 
   var geo;
 
-  if (type == 'bar') {
+  if (options.type == 'bar') {
     if (options.rounded) {
       geo = new MV.RoundedBarGeometry(width, thickness, segs);
     } else {
       geo = new THREE.CylinderGeometry(radius, radius, width, segs, 1, true);
       geo.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
+    }
+  } else if (options.type == 'bar-2d') {
+    if (options.rounded) {
+      geo = new MV.RoundedBarGeometry2D(width, thickness, segs);
+    } else {
+      geo = new THREE.PlaneGeometry(width, thickness, 1, 1);
     }
   } else { // radial
     var tubeDiameter = thickness / 2;
@@ -64,11 +104,76 @@ MV.Progress.prototype._init = function(options, type) {
   var mesh = new THREE.Mesh(geo, mat);
   container.add(mesh);
 
-  if (type == 'radial')
+  if (options.type == 'radial')
     mesh.rotation.set(0, Math.PI, Math.PI/2);
 
   this.mesh = mesh;
   this.container = container;
+};
+
+// temp: radial2D
+MV.Progress.prototype.__init = function(options) {
+  var width = options.width, height = options.width;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 2;
+  this.canvas = canvas;
+
+  this.ctx = canvas.getContext('2d');
+
+  this.texture = new THREE.Texture(canvas);
+
+  // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
+  var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
+  this._remapUVs( geo );
+
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+
+  var mat = new MatType({
+    map: this.texture,
+    transparent: !options.bg,
+    roughness: 1,
+    metalness: 0
+  });
+
+  var mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.set(0, 0, -Math.PI/2);
+  this.group.add(mesh);
+};
+
+MV.Progress.prototype._remapUVs = function(geo, size) {
+
+  geo.computeBoundingBox();
+
+  var max = geo.boundingBox.max,
+      min = geo.boundingBox.min;
+  var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
+  var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
+
+  geo.faceVertexUvs[0] = [];
+  for (var i = 0; i < geo.faces.length; i++) {
+    var v1 = geo.vertices[geo.faces[i].a],
+        v2 = geo.vertices[geo.faces[i].b],
+        v3 = geo.vertices[geo.faces[i].c];
+
+    var t1 = (Math.atan2(v1.y, v1.x) + Math.PI) / (Math.PI*2);
+    var t2 = (Math.atan2(v2.y, v2.x) + Math.PI) / (Math.PI*2);
+    var t3 = (Math.atan2(v3.y, v3.x) + Math.PI) / (Math.PI*2);
+
+    var n = i / (geo.faces.length-1);
+    geo.faceVertexUvs[0].push(
+      [
+        new THREE.Vector2(1-t1, 1-t1),
+        new THREE.Vector2(1-t2, 1-t2),
+        new THREE.Vector2(1-t3, 1-t3)
+      ]);
+  }
+
+  geo.uvsNeedUpdate = true;
+
+  geo.computeFaceNormals();
+  geo.computeVertexNormals();
 };
 
 MV.Progress.prototype.getObject = function() {
@@ -138,7 +243,9 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
 };
 
 MV.Progress.prototype._update = function(pc) {
+  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
+  this.texture.needsUpdate = true;
 };
 
 MV.Progress.prototype.update = function(dt) {

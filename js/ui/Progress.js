@@ -18,10 +18,7 @@ MV.Progress = function(options) {
   this._colors = this.options.colors;
   this._values = this.options.values;
 
-  if (this.options.type == 'radial-2d')
-    this.__init(this.options);
-  else
-    this.init(this.options);
+  this.init(this.options);
 
   this._update();
 };
@@ -65,14 +62,12 @@ MV.Progress.prototype.init = function(options) {
 
   this.texture = new THREE.Texture(this.canvas);
 
-  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
-
-
   var segs = options.segments;
   var radius = thickness/2;
 
   var geo;
 
+  // TODO: add rounded options to radials (< arc=2pi)
   if (options.type == 'bar') {
     if (options.rounded) {
       geo = new MV.RoundedBarGeometry(width, thickness, segs);
@@ -86,13 +81,19 @@ MV.Progress.prototype.init = function(options) {
     } else {
       geo = new THREE.PlaneGeometry(width, thickness, 1, 1);
     }
-  } else { // radial
+  } else if (options.type == 'radial') {
     var tubeDiameter = thickness / 2;
     var radius = (width-thickness) / 2;
 
     geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
     // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
+  } else { // radial-2d
+    // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
+    var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
+    this._remapUVs( geo );
   }
+
+  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
   var mat = new MatType( {
     map: this.texture,
@@ -106,42 +107,14 @@ MV.Progress.prototype.init = function(options) {
 
   if (options.type == 'radial')
     mesh.rotation.set(0, Math.PI, Math.PI/2);
+  else if (options.type == 'radial-2d')
+    mesh.rotation.set(0, 0, -Math.PI/2);
 
   this.mesh = mesh;
   this.container = container;
 };
 
-// temp: radial2D
-MV.Progress.prototype.__init = function(options) {
-  var width = options.width, height = options.width;
-
-  var canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 2;
-  this.canvas = canvas;
-
-  this.ctx = canvas.getContext('2d');
-
-  this.texture = new THREE.Texture(canvas);
-
-  // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
-  var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
-  this._remapUVs( geo );
-
-  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
-
-  var mat = new MatType({
-    map: this.texture,
-    transparent: !options.bg,
-    roughness: 1,
-    metalness: 0
-  });
-
-  var mesh = new THREE.Mesh(geo, mat);
-  mesh.rotation.set(0, 0, -Math.PI/2);
-  this.group.add(mesh);
-};
-
+// radial2D
 MV.Progress.prototype._remapUVs = function(geo, size) {
 
   geo.computeBoundingBox();

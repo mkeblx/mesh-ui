@@ -1,9 +1,6 @@
 var MV = MV || {};
 
-MV.ProgressBar = require('./ui/ProgressBar.js');
-MV.ProgressBar2D = require('./ui/ProgressBar2D.js');
-MV.ProgressRadial = require('./ui/ProgressRadial.js');
-MV.ProgressRadial2D = require('./ui/ProgressRadial2D.js');
+MV.Progress = require('./ui/Progress.js');
 
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -53,7 +50,8 @@ AFRAME.registerComponent('progress-bar', {
       return;
     }
 
-    this.progressBar = new MV.ProgressBar( {
+    this.progressBar = new MV.Progress( {
+      type: 'bar',
       bgColor: data.backgroundColor,
       bg: data.background,
       values: data.values,
@@ -120,7 +118,8 @@ AFRAME.registerComponent('progress-radial', {
       return;
     }
 
-    this.progressRadial = new MV.ProgressRadial( {
+    this.progressRadial = new MV.Progress( {
+      type: 'radial',
       bgColor: data.backgroundColor,
       bg: data.background,
       values: data.values,

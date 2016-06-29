@@ -20,19 +20,6 @@ MV.ProgressBar2D = function(options) {
   this._update();
 };
 
-MV.ProgressBar2D.OPTIONS = {
-  bgColor: '#666666',
-  colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
-  values: [0],
-  bg: true,
-  width: 1,
-  thickness: 0.02,
-  rounded: true,
-  lit: false,
-  segments: 16,
-  gradient: false
-};
-
 MV.ProgressBar2D.prototype = Object.create(MV.Progress.prototype);
 
 MV.ProgressBar2D.prototype.init = function(options) {

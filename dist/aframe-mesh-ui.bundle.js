@@ -52,7 +52,7 @@
 	  throw new Error('Component attempted to register before AFRAME was available.');
 	}
 
-	AFRAME.registerComponent('progress-bar', {
+	AFRAME.registerComponent('progress', {
 	  schema: {
 	    values: {
 	      default: '0.1',
@@ -71,82 +71,17 @@
 	        return value.split(' ');
 	      }
 	    },
+	    type: { default: 'bar' },
 	    backgroundColor: { default: '#666666' },
 	    background: { default: true },
 	    width: { default: 1 },
-	    thickness: { default: 0.04 },
+	    thickness: { default: 0.1 },
 	    rounded: { default: true },
 	    lit: { default: false },
 	    segments: { default: 16 },
-	    gradient: { default: false }
-	  },
-
-	  update: function(oldData) {
-	    var data = this.data;
-
-	    var diff = _.reduce(data, function(result, value, key) {
-	      return _.isEqual(value, oldData[key]) ?
-	        result : result.concat(key);
-	    }, []);
-
-	    diff = _.without(diff, ["values", "colors"]);
-	    if (diff.length === 0) {
-	      this.progressBar.setColors(data.colors);
-	      this.progressBar.setValues(data.values);
-	      return;
-	    }
-
-	    this.progressBar = new MV.Progress( {
-	      type: 'bar',
-	      bgColor: data.backgroundColor,
-	      bg: data.background,
-	      values: data.values,
-	      colors: data.colors,
-	      width: data.width,
-	      thickness: data.thickness,
-	      rounded: data.rounded,
-	      lit: data.lit,
-	      segments: data.segments,
-	      gradient: data.gradient } );
-
-	    this.el.setObject3D('mesh', this.progressBar.getObject());
-	  },
-
-	  remove: function() {
-	    this.el.removeObject3D('mesh');
-	  }
-	});
-
-	AFRAME.registerComponent('progress-radial', {
-	  schema: {
-	    values: {
-	      default: '0.1',
-	      parse: function(value) {
-	        if (typeof value == 'string')
-	          return value.split(' ').map(parseFloat);
-	        else if (Array.isArray(value))
-	          return value.map(parseFloat);
-	        else {
-	          return [parseFloat(value)];
-	        }
-	      }
-	    },
-	    colors: {
-	      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
-	      parse: function(value) {
-	        return value.split(' ');
-	      }
-	    },
-	    backgroundColor: { default: '#666666' },
-	    background: { default: true },
-	    width: { default: 1 },
-	    thickness: { default: 0.04 },
-	    rounded: { default: true },
-	    lit: { default: false },
-	    segments: { default: 52 },
+	    gradient: { default: false },
 	    radialSegments: { default: 24 },
 	    arc: { default: Math.PI*2 },
-	    gradient: { default: false }
 	  },
 
 	  update: function(oldData) {
@@ -159,13 +94,13 @@
 
 	    diff = _.without(diff, ["values", "colors"]);
 	    if (diff.length === 0) {
-	      this.progressRadial.setColors(data.colors);
-	      this.progressRadial.setValues(data.values);
+	      this.progress.setColors(data.colors);
+	      this.progress.setValues(data.values);
 	      return;
 	    }
 
-	    this.progressRadial = new MV.Progress( {
-	      type: 'radial',
+	    this.progress = new MV.Progress( {
+	      type: data.type,
 	      bgColor: data.backgroundColor,
 	      bg: data.background,
 	      values: data.values,
@@ -175,16 +110,17 @@
 	      rounded: data.rounded,
 	      lit: data.lit,
 	      segments: data.segments,
-	      gradient: data.gradient } );
+	      gradient: data.gradient,
+	      radialSegments: data.radialSegments,
+	      arc: data.arc } );
 
-	    this.el.setObject3D('mesh', this.progressRadial.getObject());
+	    this.el.setObject3D('mesh', this.progress.getObject());
 	  },
 
 	  remove: function() {
 	    this.el.removeObject3D('mesh');
 	  }
 	});
-
 
 
 /***/ },
@@ -223,18 +159,17 @@
 	  values: [0],
 	  bg: true,
 	  width: 1,
+	  thickness: 0.1,
 	  lit: false,
 	  rounded: true,
 	  gradient: false
 	};
 
 	MV.Progress.BAR_OPTIONS = {
-	  thickness: 0.05,
 	  segments: 16
 	};
 
 	MV.Progress.RADIAL_OPTIONS = {
-	  thickness: 0.1,
 	  segments: 52,
 	  radialSegments: 24,
 	  arc: Math.PI*2
@@ -249,7 +184,7 @@
 
 	  this.canvas = document.createElement('canvas');
 	  this.canvas.width = 1024;
-	  this.canvas.height = 2;
+	  this.canvas.height = 1;
 
 	  this.ctx = this.canvas.getContext('2d');
 
@@ -282,7 +217,7 @@
 	    // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
 	  } else { // radial-2d
 	    // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
-	    var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
+	    var geo = new THREE.RingGeometry((width/2) - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
 	    this._remapUVs( geo );
 	  }
 
@@ -349,6 +284,7 @@
 	// set colors for parts
 	// arr: array of color strings
 	MV.Progress.prototype.setColors = function(arr) {
+	  arr = Array.isArray(arr) ? arr : [arr];
 	  this._colors = [];
 
 	  for (var i = 0; i < arr.length; i++) {
@@ -360,6 +296,7 @@
 	// arr: array of values where values sum to <=1
 	// e.g. [ 0.3, 0.1, 0.6 ]
 	MV.Progress.prototype.setValues = function(arr)  {
+	  arr = Array.isArray(arr) ? arr : [arr];
 	  this._values = [];
 
 	  for (var i = 0; i < arr.length; i++) {
@@ -415,7 +352,7 @@
 	};
 
 	MV.Progress.prototype.update = function(dt) {
-
+	  this._update();
 	};
 
 	if ( true ) {

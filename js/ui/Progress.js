@@ -30,18 +30,17 @@ MV.Progress.OPTIONS = {
   values: [0],
   bg: true,
   width: 1,
+  thickness: 0.1,
   lit: false,
   rounded: true,
   gradient: false
 };
 
 MV.Progress.BAR_OPTIONS = {
-  thickness: 0.05,
   segments: 16
 };
 
 MV.Progress.RADIAL_OPTIONS = {
-  thickness: 0.1,
   segments: 52,
   radialSegments: 24,
   arc: Math.PI*2
@@ -56,7 +55,7 @@ MV.Progress.prototype.init = function(options) {
 
   this.canvas = document.createElement('canvas');
   this.canvas.width = 1024;
-  this.canvas.height = 2;
+  this.canvas.height = 1;
 
   this.ctx = this.canvas.getContext('2d');
 
@@ -89,7 +88,7 @@ MV.Progress.prototype.init = function(options) {
     // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
   } else { // radial-2d
     // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
-    var geo = new THREE.RingGeometry(width/2 - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
+    var geo = new THREE.RingGeometry((width/2) - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
     this._remapUVs( geo );
   }
 
@@ -156,6 +155,7 @@ MV.Progress.prototype.getObject = function() {
 // set colors for parts
 // arr: array of color strings
 MV.Progress.prototype.setColors = function(arr) {
+  arr = Array.isArray(arr) ? arr : [arr];
   this._colors = [];
 
   for (var i = 0; i < arr.length; i++) {
@@ -167,6 +167,7 @@ MV.Progress.prototype.setColors = function(arr) {
 // arr: array of values where values sum to <=1
 // e.g. [ 0.3, 0.1, 0.6 ]
 MV.Progress.prototype.setValues = function(arr)  {
+  //arr = Array.isArray(arr) ? arr : [arr];
   this._values = [];
 
   for (var i = 0; i < arr.length; i++) {
@@ -222,7 +223,7 @@ MV.Progress.prototype._update = function(pc) {
 };
 
 MV.Progress.prototype.update = function(dt) {
-
+  this._update();
 };
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {

@@ -82,7 +82,7 @@ function setupWorld() {
   progressBar = new MV.Progress( {
     type: 'bar-2d',
     width: 1,
-    thickness: 0.04,
+    thickness: 0.05,
     rounded: true,
     gradient: false } );
   //progressBar.getObject().rotation.set(0.3,1,0.3);
@@ -112,11 +112,11 @@ function setupWorld() {
   progressBar3D = new MV.Progress( {
     type: 'bar',
     width: 1,
-    thickness: 0.04,
+    thickness: 0.05,
     rounded: true,
     lit: true,
     gradient: false } );
-  progressBar3D.getObject().position.set(0, -0.07, 0);
+  progressBar3D.getObject().position.set(0, -0.08, 0);
   progressBarGroup.add( progressBar3D.getObject() );
 
   progressBar3D.setColors(colors);
@@ -130,7 +130,7 @@ function setupWorld() {
   progressRadial = new MV.Progress( {
     type: 'radial-2d',
     width: 1,
-    thickness: 0.04,
+    thickness: 0.05,
     rounded: true,
     lit: true,
     gradient: false
@@ -160,7 +160,7 @@ function setupWorld() {
   progressRadial3D = new MV.Progress( {
     type: 'radial',
     width: 1,
-    thickness: 0.04,
+    thickness: 0.05,
     rounded: true,
     lit: true,
     gradient: false

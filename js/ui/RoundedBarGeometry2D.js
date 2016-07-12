@@ -56,7 +56,7 @@ MV.RoundedBarGeometry2D = function ( width, size, segments ) {
 };
 
 MV.RoundedBarGeometry2D.prototype = Object.create( THREE.Geometry.prototype );
-MV.RoundedBarGeometry2D.prototype.constructor = THREE.RoundedBarGeometry2D;
+MV.RoundedBarGeometry2D.prototype.constructor = MV.RoundedBarGeometry2D;
 
 MV.RoundedBarGeometry2D.prototype.clone = function () {
 

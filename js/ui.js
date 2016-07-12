@@ -163,11 +163,14 @@ function setupWorld() {
     rounded: true,
     lit: true,
     gradient: false,
-    arc: Math.PI*2
+    arc: Math.PI*2,
+    segments: 42,
+    radialSegments: 8
      } );
 
   progressRadial.setColors(colors);
   progressRadial.setValues(values);
+
 
   progressRadialGroup.add( progressRadial.getObject() );
   uiElements.push( progressRadial );

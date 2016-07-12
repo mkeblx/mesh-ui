@@ -61,7 +61,7 @@ MV.RoundedBarGeometry = function ( width, size, segments ) {
 };
 
 MV.RoundedBarGeometry.prototype = Object.create( THREE.Geometry.prototype );
-MV.RoundedBarGeometry.prototype.constructor = THREE.RoundedBarGeometry;
+MV.RoundedBarGeometry.prototype.constructor = MV.RoundedBarGeometry;
 
 MV.RoundedBarGeometry.prototype.clone = function () {
 

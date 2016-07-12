@@ -17,7 +17,7 @@ MV.RoundedBarBufferGeometry = function ( width, size, segments ) {
 };
 
 MV.RoundedBarGeometry.prototype = Object.create( THREE.Geometry.prototype );
-MV.RoundedBarGeometry.prototype.constructor = THREE.RoundedBarGeometry;
+MV.RoundedBarGeometry.prototype.constructor = MV.RoundedBarBufferGeometry;
 
 MV.RoundedBarGeometry.prototype.clone = function () {
 

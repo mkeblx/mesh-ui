@@ -5,6 +5,7 @@ var MV = MV || {};
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
   MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
   MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
+  MV.RoundedTorusGeometry = require('./RoundedTorusGeometry.js');
 }
 
 MV.Progress = function(options) {
@@ -84,7 +85,11 @@ MV.Progress.prototype.init = function(options) {
     var tubeDiameter = thickness / 2;
     var radius = (width-thickness) / 2;
 
-    geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+    if (options.rounded) {
+      geo = new MV.RoundedTorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+    } else {
+      geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+    }
     // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
   } else { // radial-2d
     // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
@@ -94,12 +99,15 @@ MV.Progress.prototype.init = function(options) {
 
   var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
-  var mat = new MatType( {
+  var matOptions = {
     map: this.texture,
-    transparent: !options.bg,
-    roughness: 1,
-    metalness: 0
-  } );
+    transparent: !options.bg
+  };
+  if (options.lit) {
+    matOptions.roughness = 1;
+    matOptions.metalness = 0;
+  }
+  var mat = new MatType( matOptions );
 
   var mesh = new THREE.Mesh(geo, mat);
   container.add(mesh);

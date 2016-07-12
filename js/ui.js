@@ -49,10 +49,10 @@ function setupRendering() {
 }
 
 var progressBar;
-var progressBar3D;
+var progressBar2D;
 var progressBarLabel;
 var progressRadial;
-var progressRadial3D;
+var progressRadial2D;
 var progressRadialLabel;
 var button;
 var buttonLabel;
@@ -79,19 +79,19 @@ function setupWorld() {
 
   var progressBarGroup = new THREE.Group();
 
-  progressBar = new MV.Progress( {
+  progressBar2D = new MV.Progress( {
     type: 'bar-2d',
     width: 1,
     thickness: 0.05,
     rounded: true,
     gradient: false } );
   //progressBar.getObject().rotation.set(0.3,1,0.3);
-  progressBarGroup.add( progressBar.getObject() );
+  progressBarGroup.add( progressBar2D.getObject() );
 
-  progressBar.setColors(colors);
-  progressBar.setValues(values);
+  progressBar2D.setColors(colors);
+  progressBar2D.setValues(values);
 
-  uiElements.push(progressBar);
+  uiElements.push(progressBar2D);
 
   progressBarLabel = new MV.Text( {
     value: 'ProgressBar',
@@ -108,26 +108,25 @@ function setupWorld() {
   progressBarGroup.position.set(0, 0.8, 0);
   scene.add(progressBarGroup);
 
-  // 3D
-  progressBar3D = new MV.Progress( {
+  progressBar = new MV.Progress( {
     type: 'bar',
     width: 1,
     thickness: 0.05,
     rounded: true,
     lit: true,
     gradient: false } );
-  progressBar3D.getObject().position.set(0, -0.08, 0);
-  progressBarGroup.add( progressBar3D.getObject() );
+  progressBar.getObject().position.set(0, -0.08, 0);
+  progressBarGroup.add( progressBar.getObject() );
 
-  progressBar3D.setColors(colors);
-  progressBar3D.setValues(values);
+  progressBar.setColors(colors);
+  progressBar.setValues(values);
 
-  uiElements.push(progressBar3D);
+  uiElements.push(progressBar);
 
 
   // ProgressRadial
   var progressRadialGroup = new THREE.Group();
-  progressRadial = new MV.Progress( {
+  progressRadial2D = new MV.Progress( {
     type: 'radial-2d',
     width: 1,
     thickness: 0.05,
@@ -136,12 +135,12 @@ function setupWorld() {
     gradient: false
      } );
 
-  progressRadial.setColors(colors);
-  progressRadial.setValues(values);
+  progressRadial2D.setColors(colors);
+  progressRadial2D.setValues(values);
 
-  progressRadial.getObject().scale.set(0.85, 0.85, 0.85);
-  progressRadialGroup.add( progressRadial.getObject() );
-  uiElements.push( progressRadial );
+  progressRadial2D.getObject().scale.set(0.85, 0.85, 0.85);
+  progressRadialGroup.add( progressRadial2D.getObject() );
+  uiElements.push( progressRadial2D );
 
   progressRadialLabel = new MV.Text( {
     value: 'ProgressRadial',
@@ -156,21 +155,22 @@ function setupWorld() {
   progressRadialGroup.position.set(0, -0, 0);
   scene.add(progressRadialGroup);
 
-  // 3D
-  progressRadial3D = new MV.Progress( {
+
+  progressRadial = new MV.Progress( {
     type: 'radial',
     width: 1,
     thickness: 0.05,
     rounded: true,
     lit: true,
-    gradient: false
+    gradient: false,
+    arc: Math.PI*2
      } );
 
-  progressRadial3D.setColors(colors);
-  progressRadial3D.setValues(values);
+  progressRadial.setColors(colors);
+  progressRadial.setValues(values);
 
-  progressRadialGroup.add( progressRadial3D.getObject() );
-  uiElements.push( progressRadial3D );
+  progressRadialGroup.add( progressRadial.getObject() );
+  uiElements.push( progressRadial );
 
   // Button
   var buttonGroup = new THREE.Group();
@@ -207,14 +207,14 @@ function setupEvents() {
       buttonClick();
     } else if (event.keyCode == 71) { // G
       progressBar.options.gradient = !progressBar.options.gradient;
-      progressBar3D.options.gradient = !progressBar3D.options.gradient;
+      progressBar2D.options.gradient = !progressBar2D.options.gradient;
       progressRadial.options.gradient = !progressRadial.options.gradient;
-      progressRadial3D.options.gradient = !progressRadial3D.options.gradient;
+      progressRadial2D.options.gradient = !progressRadial2D.options.gradient;
 
       progressBar.update();
-      progressBar3D.update();
+      progressBar2D.update();
       progressRadial.update();
-      progressRadial3D.update();
+      progressRadial2D.update();
     }
   }, false );
 
@@ -253,9 +253,9 @@ function setupEvents() {
         var value = vals[0];
 
         progressBar.setValues( vals );
-        progressBar3D.setValues( vals );
+        progressBar2D.setValues( vals );
         progressRadial.setValues( vals );
-        progressRadial3D.setValues( vals );
+        progressRadial2D.setValues( vals );
         progressBarLabel.value = 'ProgressBar: ' + Math.round( value*100 );
         progressRadialLabel.value = 'ProgressRadial: ' + Math.round( value*100 );
       })

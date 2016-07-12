@@ -78,7 +78,7 @@
 	    thickness: { default: 0.1 },
 	    rounded: { default: true },
 	    lit: { default: false },
-	    segments: { default: 16 },
+	    segments: { default: 16 }, // todo: higher (52) based on type (radial)?
 	    gradient: { default: false },
 	    radialSegments: { default: 24 },
 	    arc: { default: Math.PI*2 },
@@ -296,7 +296,7 @@
 	// arr: array of values where values sum to <=1
 	// e.g. [ 0.3, 0.1, 0.6 ]
 	MV.Progress.prototype.setValues = function(arr)  {
-	  arr = Array.isArray(arr) ? arr : [arr];
+	  //arr = Array.isArray(arr) ? arr : [arr];
 	  this._values = [];
 
 	  for (var i = 0; i < arr.length; i++) {

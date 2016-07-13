@@ -85,16 +85,18 @@ MV.Progress.prototype.init = function(options) {
     var tubeDiameter = thickness / 2;
     var radius = (width-thickness) / 2;
 
-    if (options.rounded) {
+    if (options.rounded && options.arc !== Math.PI*2) {
       geo = new MV.RoundedTorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
     } else {
       geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
     }
-    // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
+    geo.applyMatrix( new THREE.Matrix4().makeRotationY( Math.PI ) );
+    geo.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/2 ) );
   } else { // radial-2d
     // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
     var geo = new THREE.RingGeometry((width/2) - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
     this._remapUVs( geo );
+    geo.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/2 ) );
   }
 
   var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
@@ -111,11 +113,6 @@ MV.Progress.prototype.init = function(options) {
 
   var mesh = new THREE.Mesh(geo, mat);
   container.add(mesh);
-
-  if (options.type == 'radial')
-    mesh.rotation.set(0, Math.PI, Math.PI/2);
-  else if (options.type == 'radial-2d')
-    mesh.rotation.set(0, 0, -Math.PI/2);
 
   this.mesh = mesh;
   this.container = container;
@@ -169,13 +166,15 @@ MV.Progress.prototype.setColors = function(arr) {
   for (var i = 0; i < arr.length; i++) {
     this._colors.push( arr[i] );
   }
+
+  this._update();
 };
 
 // set multiple values to display
 // arr: array of values where values sum to <=1
 // e.g. [ 0.3, 0.1, 0.6 ]
 MV.Progress.prototype.setValues = function(arr)  {
-  //arr = Array.isArray(arr) ? arr : [arr];
+  arr = Array.isArray(arr) ? arr : [arr];
   this._values = [];
 
   for (var i = 0; i < arr.length; i++) {

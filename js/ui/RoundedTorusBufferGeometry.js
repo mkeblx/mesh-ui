@@ -57,12 +57,7 @@ MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubular
   var capInc = tube / segmentsPerCap * 2;
   var mainInc = mainArc / mainSegments;
 
-  console.log(capInc);
-  console.log(mainInc);
-
   var pc = 0;
-
-  console.log( tubularSegments );
 
 
   var cs = [];
@@ -86,8 +81,6 @@ MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubular
 
   }
 
-  console.log(cs);
-
   for ( j = 0; j <= radialSegments; j ++ ) {
 
     var v = j / radialSegments * Math.PI * 2;
@@ -100,8 +93,6 @@ MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubular
     for ( i = 0; i <= tubularSegments; i ++ ) {
 
       var u = us[ i ];
-
-      console.log(u);
 
       // vertex
       vertex.x = ( radius + _r * cs[i] ) * Math.cos( u );
@@ -176,5 +167,5 @@ MV.RoundedTorusBufferGeometry.prototype = Object.create( THREE.BufferGeometry.pr
 MV.RoundedTorusBufferGeometry.prototype.constructor = MV.RoundedTorusBufferGeometry;
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
-  module.exports = MV.RoundedTorusGeometry;
+  module.exports = MV.RoundedTorusBufferGeometry;
 }

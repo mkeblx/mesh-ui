@@ -92,12 +92,16 @@
 	        result : result.concat(key);
 	    }, []);
 
-	    diff = _.without(diff, ["values", "colors"]);
-	    if (diff.length === 0) {
-	      this.progress.setColors(data.colors);
+	    if (_.without(diff, ["values"]).length === 0) {
 	      this.progress.setValues(data.values);
 	      return;
 	    }
+	    if (_.without(diff, ["colors"]).length === 0) {
+	      this.progress.setColors(data.colors);
+	      return;
+	    }
+
+	    console.log('test');
 
 	    this.progress = new MV.Progress( {
 	      type: data.type,
@@ -134,6 +138,7 @@
 	if ( true ) {
 	  MV.RoundedBarGeometry = __webpack_require__(2);
 	  MV.RoundedBarGeometry2D = __webpack_require__(3);
+	  MV.RoundedTorusGeometry = __webpack_require__(4);
 	}
 
 	MV.Progress = function(options) {
@@ -213,30 +218,34 @@
 	    var tubeDiameter = thickness / 2;
 	    var radius = (width-thickness) / 2;
 
-	    geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
-	    // geo.applyMatrix( new THREE.Matrix4().makeRotationFromEuler( { x:0, y: 0, z: 0 } ) );
+	    if (options.rounded && options.arc !== Math.PI*2) {
+	      geo = new MV.RoundedTorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+	    } else {
+	      geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+	    }
+	    geo.applyMatrix( new THREE.Matrix4().makeRotationY( Math.PI ) );
+	    geo.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/2 ) );
 	  } else { // radial-2d
 	    // RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength)
 	    var geo = new THREE.RingGeometry((width/2) - options.thickness, width/2, options.segments, 1, -Math.PI/2, options.arc);
 	    this._remapUVs( geo );
+	    geo.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/2 ) );
 	  }
 
 	  var MatType = options.lit ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
-	  var mat = new MatType( {
+	  var matOptions = {
 	    map: this.texture,
-	    transparent: !options.bg,
-	    roughness: 1,
-	    metalness: 0
-	  } );
+	    transparent: !options.bg
+	  };
+	  if (options.lit) {
+	    matOptions.roughness = 1;
+	    matOptions.metalness = 0;
+	  }
+	  var mat = new MatType( matOptions );
 
 	  var mesh = new THREE.Mesh(geo, mat);
 	  container.add(mesh);
-
-	  if (options.type == 'radial')
-	    mesh.rotation.set(0, Math.PI, Math.PI/2);
-	  else if (options.type == 'radial-2d')
-	    mesh.rotation.set(0, 0, -Math.PI/2);
 
 	  this.mesh = mesh;
 	  this.container = container;
@@ -290,13 +299,15 @@
 	  for (var i = 0; i < arr.length; i++) {
 	    this._colors.push( arr[i] );
 	  }
+
+	  this._update();
 	};
 
 	// set multiple values to display
 	// arr: array of values where values sum to <=1
 	// e.g. [ 0.3, 0.1, 0.6 ]
 	MV.Progress.prototype.setValues = function(arr)  {
-	  //arr = Array.isArray(arr) ? arr : [arr];
+	  arr = Array.isArray(arr) ? arr : [arr];
 	  this._values = [];
 
 	  for (var i = 0; i < arr.length; i++) {
@@ -427,7 +438,7 @@
 	};
 
 	MV.RoundedBarGeometry.prototype = Object.create( THREE.Geometry.prototype );
-	MV.RoundedBarGeometry.prototype.constructor = THREE.RoundedBarGeometry;
+	MV.RoundedBarGeometry.prototype.constructor = MV.RoundedBarGeometry;
 
 	MV.RoundedBarGeometry.prototype.clone = function () {
 
@@ -508,7 +519,7 @@
 	};
 
 	MV.RoundedBarGeometry2D.prototype = Object.create( THREE.Geometry.prototype );
-	MV.RoundedBarGeometry2D.prototype.constructor = THREE.RoundedBarGeometry2D;
+	MV.RoundedBarGeometry2D.prototype.constructor = MV.RoundedBarGeometry2D;
 
 	MV.RoundedBarGeometry2D.prototype.clone = function () {
 
@@ -524,6 +535,233 @@
 
 	if ( true ) {
 	  module.exports = MV.RoundedBarGeometry2D;
+	}
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var MV = MV || {};
+
+	if ( true ) {
+	  MV.RoundedTorusBufferGeometry = __webpack_require__(5);
+	}
+
+	MV.RoundedTorusGeometry = function ( radius, tube, radialSegments, tubularSegments, arc ) {
+
+	  THREE.Geometry.call( this );
+
+	  this.type = 'RoundedTorusGeometry';
+
+	  this.parameters = {
+	    radius: radius,
+	    tube: tube,
+	    radialSegments: radialSegments,
+	    tubularSegments: tubularSegments,
+	    arc: arc
+	  };
+
+	  this.fromBufferGeometry( new MV.RoundedTorusBufferGeometry( radius, tube, radialSegments, tubularSegments, arc ) );
+
+	};
+
+	MV.RoundedTorusGeometry.prototype = Object.create( THREE.Geometry.prototype );
+	MV.RoundedTorusGeometry.prototype.constructor = MV.RoundedTorusGeometry;
+
+	MV.RoundedTorusGeometry.prototype.clone = function () {
+
+	  var parameters = this.parameters;
+
+	  return new MV.RoundedTorusGeometry(
+	    parameters.width,
+	    parameters.size,
+	    parameters.segments
+	  );
+
+	};
+
+	if ( true ) {
+	  module.exports = MV.RoundedTorusGeometry;
+	}
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var MV = MV || {};
+
+	MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubularSegments, arc ) {
+
+	  THREE.BufferGeometry.call( this );
+
+	  this.type = 'RoundedTorusBufferGeometry';
+
+	  this.parameters = {
+	    radius: radius,
+	    tube: tube,
+	    radialSegments: radialSegments,
+	    tubularSegments: tubularSegments,
+	    arc: arc
+	  };
+
+	  radius = radius || 100;
+	  tube = tube || 40;
+	  radialSegments = Math.floor( radialSegments ) || 8;
+	  tubularSegments = Math.floor( tubularSegments ) || 6;
+	  arc = arc || Math.PI * 2;
+
+	  // TODO cleanup
+	  var segmentsPerCap = 12;
+	  var mainSegments = tubularSegments;
+	  tubularSegments += segmentsPerCap * 2;
+
+	  // used to calculate buffer length
+	  var vertexCount = ( ( radialSegments + 1 ) * ( tubularSegments + 1 ) );
+	  var indexCount = radialSegments * tubularSegments * 2 * 3;
+
+	  // buffers
+	  var indices = new ( indexCount > 65535 ? Uint32Array : Uint16Array )( indexCount );
+	  var vertices = new Float32Array( vertexCount * 3 );
+	  var normals = new Float32Array( vertexCount * 3 );
+	  var uvs = new Float32Array( vertexCount * 2 );
+
+	  // offset variables
+	  var vertexBufferOffset = 0;
+	  var uvBufferOffset = 0;
+	  var indexBufferOffset = 0;
+
+	  // helper variables
+	  var center = new THREE.Vector3();
+	  var vertex = new THREE.Vector3();
+	  var normal = new THREE.Vector3();
+
+	  var j, i;
+
+	  // generate vertices, normals and uvs
+
+	  var us = [];
+	  var capArc = tube;
+	  var mainArc = arc - (4 * capArc);
+	  var capInc = tube / segmentsPerCap * 2;
+	  var mainInc = mainArc / mainSegments;
+
+	  var pc = 0;
+
+
+	  var cs = [];
+	  var cx = 1 / (segmentsPerCap-1);
+	  for ( var i = 0; i <= tubularSegments; i++ ) {
+	    us.push( pc );
+
+	    if (i < segmentsPerCap) {
+	      pc += ( capInc );
+	      var len = 1 - (1 / (segmentsPerCap-1)) * i;
+	      var bsq = 1 - len*len;
+	      var b = Math.sqrt( bsq );
+	      cs.push( b );
+	    } else if (i >= segmentsPerCap && i < (tubularSegments - segmentsPerCap)) {
+	      pc += ( mainInc );
+	      cs.push( 1 );
+	    } else {
+	      pc += ( capInc );
+	      cs.push( cs[ Math.abs(i - tubularSegments) ] );
+	    }
+
+	  }
+
+	  for ( j = 0; j <= radialSegments; j ++ ) {
+
+	    var v = j / radialSegments * Math.PI * 2;
+	    var z = tube * Math.sin( v );
+
+
+
+	    var _r = Math.cos( v ) * tube;
+
+	    for ( i = 0; i <= tubularSegments; i ++ ) {
+
+	      var u = us[ i ];
+
+	      // vertex
+	      vertex.x = ( radius + _r * cs[i] ) * Math.cos( u );
+	      vertex.y = ( radius + _r * cs[i] ) * Math.sin( u );
+	      vertex.z = z;
+
+	      vertices[ vertexBufferOffset ] = vertex.x;
+	      vertices[ vertexBufferOffset + 1 ] = vertex.y;
+	      vertices[ vertexBufferOffset + 2 ] = vertex.z;
+
+	      // this vector is used to calculate the normal
+	      center.x = radius * Math.cos( u );
+	      center.y = radius * Math.sin( u );
+
+	      // normal
+	      normal.subVectors( vertex, center ).normalize();
+
+	      normals[ vertexBufferOffset ] = normal.x;
+	      normals[ vertexBufferOffset + 1 ] = normal.y;
+	      normals[ vertexBufferOffset + 2 ] = normal.z;
+
+	      // uv
+	      uvs[ uvBufferOffset ] = u / arc;
+	      uvs[ uvBufferOffset + 1 ] = j / radialSegments;
+
+	      // update offsets
+	      vertexBufferOffset += 3;
+	      uvBufferOffset += 2;
+
+	    }
+
+	  }
+
+	  // generate indices
+
+	  for ( j = 1; j <= radialSegments; j ++ ) {
+
+	    for ( i = 1; i <= tubularSegments; i ++ ) {
+
+	      // indices
+	      var a = ( tubularSegments + 1 ) * j + i - 1;
+	      var b = ( tubularSegments + 1 ) * ( j - 1 ) + i - 1;
+	      var c = ( tubularSegments + 1 ) * ( j - 1 ) + i;
+	      var d = ( tubularSegments + 1 ) * j + i;
+
+	      // face one
+	      indices[ indexBufferOffset ] = a;
+	      indices[ indexBufferOffset + 1 ] = b;
+	      indices[ indexBufferOffset + 2 ] = d;
+
+	      // face two
+	      indices[ indexBufferOffset + 3 ] = b;
+	      indices[ indexBufferOffset + 4 ] = c;
+	      indices[ indexBufferOffset + 5 ] = d;
+
+	      // update offset
+	      indexBufferOffset += 6;
+
+	    }
+
+	  }
+
+	  // build geometry
+	  this.setIndex( new THREE.BufferAttribute( indices, 1 ) );
+	  this.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+	  this.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
+	  this.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+
+	};
+
+	MV.RoundedTorusBufferGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+	MV.RoundedTorusBufferGeometry.prototype.constructor = MV.RoundedTorusBufferGeometry;
+
+	if ( true ) {
+	  module.exports = MV.RoundedTorusBufferGeometry;
 	}
 
 

@@ -46,12 +46,16 @@ AFRAME.registerComponent('progress', {
         result : result.concat(key);
     }, []);
 
-    diff = _.without(diff, ["values", "colors"]);
-    if (diff.length === 0) {
-      this.progress.setColors(data.colors);
+    if (_.without(diff, ["values"]).length === 0) {
       this.progress.setValues(data.values);
       return;
     }
+    if (_.without(diff, ["colors"]).length === 0) {
+      this.progress.setColors(data.colors);
+      return;
+    }
+
+    console.log('test');
 
     this.progress = new MV.Progress( {
       type: data.type,

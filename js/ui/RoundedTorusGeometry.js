@@ -1,10 +1,10 @@
 'use strict';
 
+var MV = MV || {};
+
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
   MV.RoundedTorusBufferGeometry = require('./RoundedTorusBufferGeometry.js');
 }
-
-var MV = MV || {};
 
 MV.RoundedTorusGeometry = function ( radius, tube, radialSegments, tubularSegments, arc ) {
 

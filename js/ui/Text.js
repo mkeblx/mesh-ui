@@ -11,6 +11,8 @@ class Text {
 
     this.init(this.options);
 
+    this.type = 'mv.text';
+
     this._value;
     this.value = this.options.value;
   }
@@ -68,6 +70,7 @@ class Text {
       transparent: true
     });
     var mesh = new THREE.Mesh(planeGeo, planeMat);
+    mesh.userData.object = this;
     this.mesh = mesh;
 
     container.add(mesh);

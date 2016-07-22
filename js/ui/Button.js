@@ -2,8 +2,14 @@
 
 var MV = MV || {};
 
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
+}
+
 MV.Button = function(options) {
   this.options = _.defaults(options || {}, MV.Button.OPTIONS);
+
+  this.type = 'mv.button';
 
   this._state = 'default';
 
@@ -12,24 +18,31 @@ MV.Button = function(options) {
 
 MV.Button.OPTIONS = {
   color: 0x2196f3,
-  shape: 'circle',
+  type: 'rect',
   transparent: false,
   value: 0,
   width: 0.1,
   height: 0.1,
-  image: null
+  image: null,
+  rounded: true
 };
+
+MV.Button.TYPES = [ 'rect', 'circle' ];
+MV.Button.STATES = [ 'default', 'hover', 'clicked', 'disabled' ];
 
 MV.Button.prototype.init = function(options) {
   var container = new THREE.Group();
 
   var geo;
-  if (options.shape == 'circle') {
+  if (options.type == 'circle') {
     var radius = options.width / 2;
     geo = new THREE.CircleGeometry(radius, 23);
-  } else {
-    console.log('box');
-    geo = new THREE.BoxGeometry(options.width, options.height, 0.1);
+  } else if (options.type == 'rect') {
+    if (options.rounded) {
+      geo = new MV.RoundedBarGeometry2D(options.width, options.height, 10);
+    } else {
+      geo = new THREE.BoxGeometry(options.width, options.height, 0.1);
+    }
   }
 
   var mat;
@@ -43,9 +56,10 @@ MV.Button.prototype.init = function(options) {
     transparent: true,
     opacity: 0
   });
+  this.material = mat;
 
   var mesh = new THREE.Mesh(geo, mat);
-  mesh.userData.type = 'button';
+  mesh.userData.object = this;
   this.mesh = mesh;
 
   container.add(mesh);
@@ -53,9 +67,18 @@ MV.Button.prototype.init = function(options) {
   this.container = container;
 };
 
+// TODO: better state handling ?
 MV.Button.prototype.changeState = function(state) {
   if (this._state === state)
     return;
+
+  this._state = state;
+
+  if (this._state === 'hover') {
+    this.material.opacity = 0.8;
+  } else if (this._state === 'default') {
+    this.material.opacity = 1.0;
+  }
 
   return;
 };
@@ -64,6 +87,14 @@ MV.Button.prototype._update = function() {
 
 };
 
+MV.Button.prototype.update = function(dt) {
+
+};
+
 MV.Button.prototype.getObject = function() {
   return this.container;
 };
+
+if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  module.exports = MV.Button;
+}

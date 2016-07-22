@@ -14,6 +14,8 @@ MV.RoundedBarGeometry2D = function ( width, size, segments ) {
     segments: segments
   };
 
+  segments = segments !== undefined ?  Math.max( 3, segments ) : 6;
+
   var thickness = size;
   var radius = thickness/2;
   var _width = width - 2*radius;

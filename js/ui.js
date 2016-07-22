@@ -181,6 +181,8 @@ function setupWorld() {
     id: 'update',
     title: 'Update',
     width: 0.2,
+    height: 0.1,
+    type: 'circle',
     image: 'textures/buttons/refresh_button.png'
   } );
   buttonGroup.add( button.mesh );
@@ -233,7 +235,7 @@ function setupEvents() {
   function onDocumentClick( event ) {
     event.preventDefault();
 
-    if (selection && selection.userData.type == 'button') {
+    if (selection && selection.userData.object.type == 'mv.button') {
       buttonClick();
     }
   }
@@ -275,16 +277,27 @@ function processUi() {
   if (mouse.x === 0)
     return;
 
+  //reset
+  if (selection) {
+    if (selection.userData.object.type == 'mv.button') {
+      selection.userData.object.changeState('default');
+    }
+  }
+
   raycaster.setFromCamera( mouse, camera );
 
   var intersects = raycaster.intersectObjects( scene.children , true );
 
   if ( intersects.length > 0 ) {
     intersectionEl.innerHTML = 'intersection';
-    //intersects[0].object.material.color = 0xff0000;
     selection = intersects[0].object;
+
+    if (selection.userData.object.type === 'mv.button') {
+      selection.userData.object.changeState('hover');
+    }
   } else {
     intersectionEl.innerHTML = '';
+
     selection = null;
   }
 }

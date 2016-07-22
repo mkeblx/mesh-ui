@@ -14,6 +14,8 @@ MV.Progress = function(options) {
     ? MV.Progress.BAR_OPTIONS : MV.Progress.RADIAL_OPTIONS;
   this.options = _.defaults(this.options || {}, opts);
 
+  this.type = 'mv.progress';
+
   this.group = new THREE.Object3D();
 
   this._colors = this.options.colors;
@@ -112,6 +114,7 @@ MV.Progress.prototype.init = function(options) {
   var mat = new MatType( matOptions );
 
   var mesh = new THREE.Mesh(geo, mat);
+  mesh.userData.object = this;
   container.add(mesh);
 
   this.mesh = mesh;
@@ -223,7 +226,7 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   }
 };
 
-MV.Progress.prototype._update = function(pc) {
+MV.Progress.prototype._update = function() {
   this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;

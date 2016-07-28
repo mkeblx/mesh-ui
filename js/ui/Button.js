@@ -3,6 +3,7 @@
 var MV = MV || {};
 
 if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
+  //var __ = require('../../node_modules/lodash/core.min.js');
   MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
 }
 

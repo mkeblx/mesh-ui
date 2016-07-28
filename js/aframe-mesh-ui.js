@@ -55,8 +55,6 @@ AFRAME.registerComponent('progress', {
       return;
     }
 
-    console.log('test');
-
     this.progress = new MV.Progress( {
       type: data.type,
       bgColor: data.backgroundColor,

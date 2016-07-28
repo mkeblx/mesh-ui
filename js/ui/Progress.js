@@ -126,11 +126,6 @@ MV.Progress.prototype._remapUVs = function(geo, size) {
 
   geo.computeBoundingBox();
 
-  var max = geo.boundingBox.max,
-      min = geo.boundingBox.min;
-  var offset = new THREE.Vector2(0 - min.x, 0 - min.y);
-  var range = new THREE.Vector2(max.x - min.x, max.y - min.y);
-
   geo.faceVertexUvs[0] = [];
   for (var i = 0; i < geo.faces.length; i++) {
     var v1 = geo.vertices[geo.faces[i].a],
@@ -141,7 +136,6 @@ MV.Progress.prototype._remapUVs = function(geo, size) {
     var t2 = (Math.atan2(v2.y, v2.x) + Math.PI) / (Math.PI*2);
     var t3 = (Math.atan2(v3.y, v3.x) + Math.PI) / (Math.PI*2);
 
-    var n = i / (geo.faces.length-1);
     geo.faceVertexUvs[0].push(
       [
         new THREE.Vector2(1-t1, 1-t1),

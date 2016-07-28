@@ -12,8 +12,8 @@
   ],
   "main": "dist/mesh-ui.bundle.js",
   "scripts": {
-    "dist": "webpack js/mesh-ui.js dist/mesh-ui.bundle.js",
-    "aframe": "webpack js/aframe-mesh-ui.js dist/aframe-mesh-ui.bundle.js"
+    "dist": "webpack js/mesh-ui.js dist/mesh-ui.bundle.js --optimize-minimize",
+    "aframe": "webpack js/aframe-mesh-ui.js dist/aframe-mesh-ui.bundle.js --optimize-minimize"
   },
   "repository": {
     "type": "git",

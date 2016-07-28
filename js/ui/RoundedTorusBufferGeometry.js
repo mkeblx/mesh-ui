@@ -61,7 +61,7 @@ MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubular
 
 
   var cs = [];
-  var cx = 1 / (segmentsPerCap-1);
+  //var cx = 1 / (segmentsPerCap-1);
   for ( var i = 0; i <= tubularSegments; i++ ) {
     us.push( pc );
 

@@ -72,6 +72,8 @@
 	    ? MV.Progress.BAR_OPTIONS : MV.Progress.RADIAL_OPTIONS;
 	  this.options = _.defaults(this.options || {}, opts);
 
+	  this.type = 'mv.progress';
+
 	  this.group = new THREE.Object3D();
 
 	  this._colors = this.options.colors;
@@ -90,7 +92,7 @@
 	  bg: true,
 	  width: 1,
 	  thickness: 0.1,
-	  lit: false,
+	  lit: true,
 	  rounded: true,
 	  gradient: false
 	};
@@ -170,6 +172,7 @@
 	  var mat = new MatType( matOptions );
 
 	  var mesh = new THREE.Mesh(geo, mat);
+	  mesh.userData.object = this;
 	  container.add(mesh);
 
 	  this.mesh = mesh;
@@ -281,7 +284,7 @@
 	  }
 	};
 
-	MV.Progress.prototype._update = function(pc) {
+	MV.Progress.prototype._update = function() {
 	  this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
 	  this.texture.needsUpdate = true;
@@ -401,6 +404,8 @@
 	    size: size,
 	    segments: segments
 	  };
+
+	  segments = segments !== undefined ?  Math.max( 3, segments ) : 6;
 
 	  var thickness = size;
 	  var radius = thickness/2;

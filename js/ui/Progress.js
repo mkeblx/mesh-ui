@@ -34,7 +34,7 @@ MV.Progress.OPTIONS = {
   bg: true,
   width: 1,
   thickness: 0.1,
-  lit: false,
+  lit: true,
   rounded: true,
   gradient: false
 };

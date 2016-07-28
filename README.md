@@ -57,3 +57,23 @@ var pr = document.getElementById('progress-radial');
 pr.setAttribute('progress', 'values', '0.1 0.2 0.3');
 </script>
 ```
+
+
+### Properties
+
+| Name | Value | Default |
+| ---- | ----- | ------- |
+| type | One of 'bar', 'radial' or for 2D versions 'bar-2d', 'radial-2d' | 'bar' |
+| bgColor | Background color of mesh, visible when a value doesn't cover | |
+| colors | Array of colors for segments: segment i with value=values[i] uses colors[i] | ['#9c27b0','#2196f3','#e91e63','#00bcd4'] |
+| values | Array of values for segments, sum <= 1 | [0] |
+| bg | draw the background color. If false, background transparent | true |
+| width | Width of progress element (outer width) | 1 |
+| thickness | Thickness dimension | 0.1 |
+| lit | use lighting for material | false |
+| rounded | use rounded endcaps for geometry | true |
+| gradient | draw gradient using all colors; will use only first value | false |
+| segments | number of geometry segments | 16 for bar, 52 for radial |
+| arc | for radial type, arc angle | 2*pi radians (360&deg;) |
+
+

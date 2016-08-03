@@ -36,7 +36,10 @@ MV.Progress.OPTIONS = {
   thickness: 0.1,
   lit: true,
   rounded: true,
-  gradient: false
+  gradient: false,
+  border: false,
+  borderWidth: 0.01,
+  borderColor: '#666666'
 };
 
 MV.Progress.BAR_OPTIONS = {
@@ -58,7 +61,7 @@ MV.Progress.prototype.init = function(options) {
 
   this.canvas = document.createElement('canvas');
   this.canvas.width = 1024;
-  this.canvas.height = 1;
+  this.canvas.height = (options.border) ? 32 : 1;
 
   this.ctx = this.canvas.getContext('2d');
 
@@ -185,6 +188,8 @@ MV.Progress.prototype.setValues = function(arr)  {
 MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   var w = canvas.width, h = canvas.height;
 
+  //console.log( w, h );
+
   if (!opts.bg) {
     ctx.clearRect( 0,0, w,h );
   } else {
@@ -215,6 +220,32 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
         ctx.fillRect( w*start,0, w*val,h );
 
         start += val;
+      }
+    }
+  }
+
+  if (opts.border && (opts.type === 'bar-2d' || opts.type === 'radial-2d')) {
+    var borderWidthRatio = opts.borderWidth / opts.thickness;
+
+    ctx.fillStyle = opts.borderColor;
+    ctx.fillRect( 0,0, w,h*borderWidthRatio );
+    ctx.fillRect( 0,h-h*borderWidthRatio, w,h*borderWidthRatio );
+
+    // TODO: endcaps
+    if (0 && opts.type === 'radial-2d' && opts.arc !== Math.PI*2) {
+
+    } else if (0 && opts.type === 'bar-2d') {
+      if (opts.rounded) {
+        ctx.beginPath();
+        ctx.lineWidth = borderWidthRatio;
+        ctx.strokeStyle = opts.borderColor;
+
+        //ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+
+        ctx.stroke();
+      } else {
+        // ctx.fillRect( * );
+        // ctx.fillRect( * );
       }
     }
   }

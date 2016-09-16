@@ -25,7 +25,7 @@ MV.Button.OPTIONS = {
   width: 0.1,
   height: 0.1,
   image: null,
-  rounded: true
+  rounded: false
 };
 
 MV.Button.TYPES = [ 'rect', 'circle' ];
@@ -42,7 +42,7 @@ MV.Button.prototype.init = function(options) {
     if (options.rounded) {
       geo = new MV.RoundedBarGeometry2D(options.width, options.height, 10);
     } else {
-      geo = new THREE.BoxGeometry(options.width, options.height, 0.1);
+      geo = new THREE.PlaneGeometry(options.width, options.height);
     }
   }
 

@@ -1,7 +1,3 @@
 // mesh-ui
 
-var K  = {};
-
-K.Progress = require('./ui/Progress.js');
-
-window.MV = K;
+export { Progress } from './ui/Progress.js';

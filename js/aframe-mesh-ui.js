@@ -1,6 +1,4 @@
-var MV = MV || {};
-
-MV.Progress = require('./ui/Progress.js');
+import { Progress } from './ui/Progress.js';
 
 if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
@@ -55,7 +53,7 @@ AFRAME.registerComponent('progress', {
       return;
     }
 
-    this.progress = new MV.Progress( {
+    this.progress = new Progress( {
       type: data.type,
       bgColor: data.backgroundColor,
       bg: data.background,
@@ -77,3 +75,5 @@ AFRAME.registerComponent('progress', {
     this.el.removeObject3D('mesh');
   }
 });
+
+export default

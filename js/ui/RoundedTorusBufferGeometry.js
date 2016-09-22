@@ -1,8 +1,6 @@
 'use strict';
 
-var MV = MV || {};
-
-MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubularSegments, arc ) {
+var RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubularSegments, arc ) {
 
   THREE.BufferGeometry.call( this );
 
@@ -163,9 +161,21 @@ MV.RoundedTorusBufferGeometry = function ( radius, tube, radialSegments, tubular
 
 };
 
-MV.RoundedTorusBufferGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
-MV.RoundedTorusBufferGeometry.prototype.constructor = MV.RoundedTorusBufferGeometry;
+RoundedTorusBufferGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+RoundedTorusBufferGeometry.prototype.constructor = RoundedTorusBufferGeometry;
 
-if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
-  module.exports = MV.RoundedTorusBufferGeometry;
-}
+RoundedTorusBufferGeometry.prototype.clone = function () {
+
+  var parameters = this.parameters;
+
+  return new RoundedTorusBufferGeometry(
+    parameters.radius,
+    parameters.tube,
+    parameters.radialSegments,
+    parameters.tubularSegments,
+    parameters.arc
+  );
+
+};
+
+export default RoundedTorusBufferGeometry;

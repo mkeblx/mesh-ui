@@ -1,8 +1,6 @@
 'use strict';
 
-var MV = MV || {};
-
-MV.RoundedBarBufferGeometry = function ( width, size, segments ) {
+var RoundedBarBufferGeometry2D = function ( width, size, segments ) {
 
   THREE.Geometry.call( this );
 
@@ -16,17 +14,19 @@ MV.RoundedBarBufferGeometry = function ( width, size, segments ) {
 
 };
 
-MV.RoundedBarGeometry.prototype = Object.create( THREE.Geometry.prototype );
-MV.RoundedBarGeometry.prototype.constructor = MV.RoundedBarBufferGeometry;
+RoundedBarBufferGeometry2D.prototype = Object.create( THREE.Geometry.prototype );
+RoundedBarBufferGeometry2D.prototype.constructor = RoundedBarBufferGeometry2D;
 
-MV.RoundedBarGeometry.prototype.clone = function () {
+RoundedBarBufferGeometry2D.prototype.clone = function () {
 
   var parameters = this.parameters;
 
-  return new MV.RoundedBarGeometry(
+  return new RoundedBarBufferGeometry2D(
     parameters.width,
     parameters.size,
     parameters.segments
   );
 
 };
+
+export default RoundedBarBufferGeometry2D;

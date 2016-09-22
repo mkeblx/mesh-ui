@@ -1,8 +1,6 @@
 'use strict';
 
-var MV = MV || {};
-
-MV.RoundedBarGeometry2D = function ( width, size, segments ) {
+var RoundedBarGeometry2D = function ( width, size, segments ) {
 
   THREE.Geometry.call( this );
 
@@ -53,18 +51,18 @@ MV.RoundedBarGeometry2D = function ( width, size, segments ) {
 
   this.uvsNeedUpdate = true;
 
-  //this.fromBufferGeometry( new MV.RoundedBarBufferGeometry( width, size, segments ) );
+  //this.fromBufferGeometry( new RoundedBarBufferGeometry( width, size, segments ) );
 
 };
 
-MV.RoundedBarGeometry2D.prototype = Object.create( THREE.Geometry.prototype );
-MV.RoundedBarGeometry2D.prototype.constructor = MV.RoundedBarGeometry2D;
+RoundedBarGeometry2D.prototype = Object.create( THREE.Geometry.prototype );
+RoundedBarGeometry2D.prototype.constructor = RoundedBarGeometry2D;
 
-MV.RoundedBarGeometry2D.prototype.clone = function () {
+RoundedBarGeometry2D.prototype.clone = function () {
 
   var parameters = this.parameters;
 
-  return new MV.RoundedBarGeometry(
+  return new RoundedBarGeometry2D(
     parameters.width,
     parameters.size,
     parameters.segments
@@ -72,6 +70,4 @@ MV.RoundedBarGeometry2D.prototype.clone = function () {
 
 };
 
-if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
-  module.exports = MV.RoundedBarGeometry2D;
-}
+export default RoundedBarGeometry2D;

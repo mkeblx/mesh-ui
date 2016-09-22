@@ -1,17 +1,13 @@
 'use strict';
 
-var MV = MV || {};
+import RoundedBarGeometry from './RoundedBarGeometry.js';
+import RoundedBarGeometry2D from './RoundedBarGeometry2D.js';
+import RoundedTorusGeometry from './RoundedTorusGeometry.js';
 
-if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
-  MV.RoundedBarGeometry = require('./RoundedBarGeometry.js');
-  MV.RoundedBarGeometry2D = require('./RoundedBarGeometry2D.js');
-  MV.RoundedTorusGeometry = require('./RoundedTorusGeometry.js');
-}
-
-MV.Progress = function(options) {
-  this.options = _.defaults(options || {}, MV.Progress.OPTIONS);
+var Progress = function(options) {
+  this.options = _.defaults(options || {}, Progress.OPTIONS);
   var opts = (this.options.type == 'bar' || this.options.type == 'bar-2d')
-    ? MV.Progress.BAR_OPTIONS : MV.Progress.RADIAL_OPTIONS;
+    ? Progress.BAR_OPTIONS : Progress.RADIAL_OPTIONS;
   this.options = _.defaults(this.options || {}, opts);
 
   this.type = 'mv.progress';
@@ -26,7 +22,7 @@ MV.Progress = function(options) {
   this._update();
 };
 
-MV.Progress.OPTIONS = {
+Progress.OPTIONS = {
   type: 'bar',
   bgColor: '#666666',
   colors: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
@@ -42,17 +38,17 @@ MV.Progress.OPTIONS = {
   borderColor: '#666666'
 };
 
-MV.Progress.BAR_OPTIONS = {
+Progress.BAR_OPTIONS = {
   segments: 16
 };
 
-MV.Progress.RADIAL_OPTIONS = {
+Progress.RADIAL_OPTIONS = {
   segments: 52,
   radialSegments: 24,
   arc: Math.PI*2
 };
 
-MV.Progress.prototype.init = function(options) {
+Progress.prototype.init = function(options) {
   var container = new THREE.Object3D();
   this.group.add(container);
 
@@ -75,14 +71,14 @@ MV.Progress.prototype.init = function(options) {
   // TODO: add rounded options to radials (< arc=2pi)
   if (options.type == 'bar') {
     if (options.rounded) {
-      geo = new MV.RoundedBarGeometry(width, thickness, segs);
+      geo = new RoundedBarGeometry(width, thickness, segs);
     } else {
       geo = new THREE.CylinderGeometry(radius, radius, width, segs, 1, true);
       geo.applyMatrix(new THREE.Matrix4().makeRotationZ( Math.PI / 2));
     }
   } else if (options.type == 'bar-2d') {
     if (options.rounded) {
-      geo = new MV.RoundedBarGeometry2D(width, thickness, segs);
+      geo = new RoundedBarGeometry2D(width, thickness, segs);
     } else {
       geo = new THREE.PlaneGeometry(width, thickness, 1, 1);
     }
@@ -91,7 +87,7 @@ MV.Progress.prototype.init = function(options) {
     var radius = (width-thickness) / 2;
 
     if (options.rounded && options.arc !== Math.PI*2) {
-      geo = new MV.RoundedTorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
+      geo = new RoundedTorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
     } else {
       geo = new THREE.TorusGeometry(radius, tubeDiameter, options.radialSegments, options.segments, options.arc);
     }
@@ -125,7 +121,7 @@ MV.Progress.prototype.init = function(options) {
 };
 
 // radial2D
-MV.Progress.prototype._remapUVs = function(geo, size) {
+Progress.prototype._remapUVs = function(geo, size) {
 
   geo.computeBoundingBox();
 
@@ -153,13 +149,13 @@ MV.Progress.prototype._remapUVs = function(geo, size) {
   geo.computeVertexNormals();
 };
 
-MV.Progress.prototype.getObject = function() {
+Progress.prototype.getObject = function() {
   return this.group;
 };
 
 // set colors for parts
 // arr: array of color strings
-MV.Progress.prototype.setColors = function(arr) {
+Progress.prototype.setColors = function(arr) {
   arr = Array.isArray(arr) ? arr : [arr];
   this._colors = [];
 
@@ -173,7 +169,7 @@ MV.Progress.prototype.setColors = function(arr) {
 // set multiple values to display
 // arr: array of values where values sum to <=1
 // e.g. [ 0.3, 0.1, 0.6 ]
-MV.Progress.prototype.setValues = function(arr)  {
+Progress.prototype.setValues = function(arr)  {
   arr = Array.isArray(arr) ? arr : [arr];
   this._values = [];
 
@@ -185,7 +181,7 @@ MV.Progress.prototype.setValues = function(arr)  {
 };
 
 // draw segments & gradients
-MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
+Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   var w = canvas.width, h = canvas.height;
 
   //console.log( w, h );
@@ -251,16 +247,14 @@ MV.Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
   }
 };
 
-MV.Progress.prototype._update = function() {
+Progress.prototype._update = function() {
   this._draw(this.ctx, this.canvas, this._values, this._colors, this.options);
 
   this.texture.needsUpdate = true;
 };
 
-MV.Progress.prototype.update = function(dt) {
+Progress.prototype.update = function(dt) {
   this._update();
 };
 
-if ( 'undefined' !== typeof exports && 'undefined' !== typeof module ) {
-  module.exports = MV.Progress;
-}
+export { Progress };

@@ -13,11 +13,10 @@
   "main": "dist/mesh-ui.min.js",
   "scripts": {
     "build": "rollup -c",
-    "build-uglify": "rollup -c && uglifyjs dist/mesh-ui.js > dist/mesh-ui.min.js",
+    "build-min": "rollup -c && uglifyjs dist/mesh-ui.js > dist/mesh-ui.min.js",
 
-    "build-aframe": "rollup js/aframe-mesh-ui.js --output dist/aframe-mesh-ui.js",
-    "build-aframe-uglify": "uglifyjs dist/aframe-mesh-ui.js > dist/aframe-mesh-ui.min.js",
-    "aframe": "webpack js/aframe-mesh-ui.js dist/aframe-mesh-ui.bundle.js --optimize-minimize",
+    "build-aframe": "rollup js/aframe-mesh-ui.js --f iife --g aframe:AFRAME --output dist/aframe-mesh-ui.js",
+    "build-aframe-min": "uglifyjs dist/aframe-mesh-ui.js > dist/aframe-mesh-ui.min.js",
 
     "build-all": "",
 
@@ -35,12 +34,10 @@
   },
   "homepage": "https://github.com/mkeblx/mesh-ui",
   "devDependencies": {
-    "browserify": "^13.0.0",
     "rollup": "^0.36.0",
     "rollup-watch": "^2.5.0",
     "script-loader": "^0.7.0",
-    "uglify-js": "^2.7.3",
-    "webpack": "^1.13.0"
+    "uglify-js": "^2.7.3"
   },
   "dependencies": {}
 }

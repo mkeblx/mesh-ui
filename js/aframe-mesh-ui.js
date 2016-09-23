@@ -76,4 +76,3 @@ AFRAME.registerComponent('progress', {
   }
 });
 
-export default

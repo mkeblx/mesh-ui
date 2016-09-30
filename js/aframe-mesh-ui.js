@@ -7,18 +7,18 @@ if (typeof AFRAME === 'undefined') {
 AFRAME.registerComponent('progress', {
   schema: {
     values: {
-      default: '0.1',
+      default: ['0.1'].join(' '),
+      type: 'string',
       parse: function(value) {
         if (typeof value == 'string')
           return value.split(' ').map(parseFloat);
-        else if (Array.isArray(value))
-          return value.map(parseFloat);
         else
           return [value];
       }
     },
     colors: {
-      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'],
+      default: ['#9c27b0','#2196f3','#e91e63','#00bcd4'].join(' '),
+      type: 'string',
       parse: function(value) {
         return value.split(' ');
       }

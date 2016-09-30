@@ -21,6 +21,7 @@
     "build-all": "",
 
     "dev": "rollup -c -w",
+    "dev-aframe": "rollup js/aframe-mesh-ui.js --f iife --g aframe:AFRAME --output dist/aframe-mesh-ui.js -w",
 
     "test": "echo \"Error: no test specified\" && exit 1"
   },

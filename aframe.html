@@ -3,14 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>mesh-ui - aframe</title>
+  <title>mesh-ui - aframe</title>
+
+<script src="js/libs/aframe.js"></script>
 </head>
 <body>
 
-<script src="js/libs/aframe.js"></script>
-
 <script src="js/libs/lodash.min.js"></script>
-<!--<script src="js/libs/three.js"></script>-->
 
 <script src="dist/aframe-mesh-ui.js"></script>
 
@@ -52,7 +51,7 @@ setInterval(function(){
 
 function update() {
 
-  var curr = pb1.getAttribute('progress').values.split(' ').map(parseFloat);
+  var curr = pb1.getAttribute('progress').values;
 
   var values = [ Math.random(), Math.random(), Math.random() ];
 

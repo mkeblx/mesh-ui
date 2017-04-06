@@ -13,6 +13,12 @@ var raycaster;
 
 var uiElements = [];
 
+var colors = [
+  '#9c27b0',
+  '#2196f3',
+  '#e91e63',
+  '#00bcd4'];
+
 load();
 
 function load() {
@@ -86,6 +92,7 @@ function onWindowResize() {
 
 }
 
+
 var progressBar;
 var progressBar2D;
 var progressBarLabel;
@@ -108,11 +115,6 @@ function setupWorld() {
 
 
   // ProgressBar
-  var colors = [
-    '#9c27b0',
-    '#2196f3',
-    '#e91e63',
-    '#00bcd4'];
   var values = [0.1, 0.2, 0.3];
 
   var progressBarGroup = new THREE.Group();
@@ -240,14 +242,21 @@ function setupWorld() {
 
 function setupEvents() {
   document.addEventListener('keydown', function(event){
-    console.log(event.keyCode);
     if (event.keyCode == 82) { // R
       buttonClick();
     } else if (event.keyCode == 71) { // G
-      progressBar.options.gradient = !progressBar.options.gradient;
-      progressBar2D.options.gradient = !progressBar2D.options.gradient;
-      progressRadial.options.gradient = !progressRadial.options.gradient;
-      progressRadial2D.options.gradient = !progressRadial2D.options.gradient;
+      var grad = !progressBar.options.gradient;
+      progressBar.options.gradient = grad;
+      progressBar2D.options.gradient = grad;
+      progressRadial.options.gradient = grad;
+      progressRadial2D.options.gradient = grad;
+
+      var _colors = grad ? colors.slice(0, 2) : colors;
+
+      progressBar._colors = _colors;
+      progressBar2D._colors = _colors;
+      progressRadial._colors = _colors;
+      progressRadial2D._colors = _colors;
 
       progressBar.update();
       progressBar2D.update();
@@ -260,7 +269,6 @@ function setupEvents() {
   document.addEventListener( 'keydown', onKeyDown, false );
 
   function onKeyDown(e) {
-    console.log(e.keyCode);
     if (e.keyCode == 30) {
 
     } else if (e.keyCode == 70) { // f
@@ -279,6 +287,10 @@ function setupEvents() {
     if (selection && selection.userData.type == 'button') {
       buttonClick();
     }
+
+    document.getElementById('enter-vr').addEventListener('click', function(ev){
+      effect.setFullScreen(true);
+    });
   }
 
   var buttonClick = function(e){

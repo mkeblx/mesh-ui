@@ -204,7 +204,11 @@ Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
     ctx.fillRect( 0,0, w,h );
 
     ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( w*vals[0],0, w,h );
+    var totalVal = 0;
+    for (var k = 0; k < vals.length; k++) {
+      totalVal += vals[k];
+    }
+    ctx.fillRect( w*totalVal,0, w,h );
   } else {
     if (vals.length && vals.length <= colors.length) {
       var start = 0;

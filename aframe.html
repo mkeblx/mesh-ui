@@ -15,11 +15,8 @@
 
 <script src="js/aframe-sky-gradient.js"></script>
 
-<a-scene antialias="true">
-  <a-box position="-1.5 0.5 1" rotation="0 45 0" width="1" height="1" depth="1"  color="#4CC3D9"></a-box>
-  <a-plane rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-
-  <a-entity position="0 0 1">
+<a-scene antialias="false">
+  <a-entity position="0 -1 1">
     <a-entity id="pb1" progress="type: bar; values: 0.1 0.5 0.1; width: 3; thickness: 0.1; lit: true" position="0 1.2 0"></a-entity>
     <a-entity id="pb2" progress="type: bar; values: 0.8; width: 3; thickness: 0.1; lit: true; gradient: true; colors: #9c27b0 #2196f3 #e91e63" position="0 1.4 0"></a-entity>
 

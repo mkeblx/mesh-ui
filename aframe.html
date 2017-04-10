@@ -15,13 +15,13 @@
 
 <script src="js/aframe-sky-gradient.js"></script>
 
-<a-scene antialias="false">
+<a-scene antialias="true">
   <a-entity position="0 -1 1">
     <a-entity id="pb1" progress="type: bar; values: 0.1 0.5 0.1; width: 3; thickness: 0.1; lit: true" position="0 1.2 0"></a-entity>
-    <a-entity id="pb2" progress="type: bar; values: 0.8; width: 3; thickness: 0.1; lit: true; gradient: true; colors: #9c27b0 #2196f3 #e91e63" position="0 1.4 0"></a-entity>
+    <a-entity id="pb2" progress="type: bar; values: 0.7; width: 3; thickness: 0.1; lit: true; gradient: true; colors: #9c27b0 #2196f3" position="0 1.4 0"></a-entity>
 
-    <a-entity id="pr1" progress="type: radial; values: 0.1 0.5 0.1; width: 1.3; thickness: 0.1; lit: true" position="0.75 2.2 0"></a-entity>
-    <a-entity id="pr2" progress="type: radial; values: 0.8; width: 1.3; thickness: 0.1; lit: true; gradient: true; colors: #9c27b0 #2196f3 #e91e63" position="-0.75 2.2 0"></a-entity>
+    <a-entity id="pr1" progress="type: radial; segments: 32; values: 0.1 0.5 0.1; width: 1.3; thickness: 0.1; lit: true" position="0.75 2.2 0"></a-entity>
+    <a-entity id="pr2" progress="type: radial; segments: 32; values: 0.7; width: 1.3; thickness: 0.1; lit: true; gradient: true; colors: #9c27b0 #2196f3" position="-0.75 2.2 0"></a-entity>
   </a-entity>
 
   <a-entity camera look-controls wasd-controls position="0 1 3"></a-entity>
@@ -34,6 +34,7 @@
 <script src="js/libs/tween.min.js"></script>
 
 <script>
+'use strict';
 
 var pb1 = document.getElementById('pb1');
 var pb2 = document.getElementById('pb2');
@@ -69,12 +70,10 @@ function update() {
       pr1.setAttribute('progress', 'values', vals.join(' '));
       pr2.setAttribute('progress', 'values', val.toString());
 
-
       /*pb1.components['progress'].progress.setValues( vals );
       pb2.components['progress'].progress.setValues( vals );
       pr1.components['progress'].progress.setValues( vals );
       pr2.components['progress'].progress.setValues( vals );*/
-
 
     })
     .onComplete(function(){

@@ -555,7 +555,11 @@ Progress.prototype._draw = function(ctx, canvas, vals, colors, opts) {
     ctx.fillRect( 0,0, w,h );
 
     ctx.fillStyle = opts.bgColor;
-    ctx.fillRect( w*vals[0],0, w,h );
+    var totalVal = 0;
+    for (var k = 0; k < vals.length; k++) {
+      totalVal += vals[k];
+    }
+    ctx.fillRect( w*totalVal,0, w,h );
   } else {
     if (vals.length && vals.length <= colors.length) {
       var start = 0;
@@ -632,50 +636,48 @@ AFRAME.registerComponent('progress', {
       }
     },
     type: { default: 'bar' },
-    backgroundColor: { default: '#666666' },
-    background: { default: true },
+    bgColor: { default: '#666666' },
+    bg: { default: true },
     width: { default: 1 },
     thickness: { default: 0.1 },
     rounded: { default: true },
     lit: { default: false },
-    segments: { default: 16 }, // todo: higher (52) based on type (radial)?
     gradient: { default: false },
+    segments: { default: 16 }, // todo: higher (52) based on type (radial)?
     radialSegments: { default: 24 },
     arc: { default: Math.PI*2 },
   },
 
+  multiple: false,
+
+  init: function() {
+    this.firstRun = true; // temp?
+
+    this.progress = new Progress( this.data );
+    this.el.setObject3D('mesh', this.progress.getObject());
+  },
+
   update: function(oldData) {
+    if (!this.firstRun) {
+      this.firstRun = false;
+      return;
+    }
+
     var data = this.data;
+    var diff = AFRAME.utils.diff(oldData, data);
 
-    var diff = _.reduce(data, function(result, value, key) {
-      return _.isEqual(value, oldData[key]) ?
-        result : result.concat(key);
-    }, []);
-
-    if (_.without(diff, ["values"]).length === 0) {
-      this.progress.setValues(data.values);
+    // TODO: check that only values/colors changed for early exit
+    if ('values' in diff || 'colors' in diff) {
+      if ('values' in diff) {
+        this.progress.setValues(data.values);
+      }
+      if ('colors' in diff) {
+        this.progress.setColors(data.colors);
+      }
       return;
     }
-    if (_.without(diff, ["colors"]).length === 0) {
-      this.progress.setColors(data.colors);
-      return;
-    }
 
-    this.progress = new Progress( {
-      type: data.type,
-      bgColor: data.backgroundColor,
-      bg: data.background,
-      values: data.values,
-      colors: data.colors,
-      width: data.width,
-      thickness: data.thickness,
-      rounded: data.rounded,
-      lit: data.lit,
-      segments: data.segments,
-      gradient: data.gradient,
-      radialSegments: data.radialSegments,
-      arc: data.arc } );
-
+    this.progress = new Progress( data );
     this.el.setObject3D('mesh', this.progress.getObject());
   },
 
